@@ -8,7 +8,7 @@ Install with `npm install napa` then setup your local `package.json` scripts as 
 ```json
 {
   "scripts": {
-    "install": "node_modules/.bin/napa username/repo"
+    "install": "napa username/repo"
   }
 }
 ```
@@ -20,7 +20,7 @@ Now when you run `npm install` it will `git clone git://github.com/username/repo
 ```json
 {
   "scripts": {
-    "install": "node_modules/.bin/napa username/repo:adifferentname"
+    "install": "napa username/repo:adifferentname"
   }
 }
 ```
@@ -32,7 +32,7 @@ Now it will install to `node_modules/adifferentname`.
 ```json
 {
   "scripts": {
-    "install": "node_modules/.bin/napa git://example.com/user/repo:privatepackage"
+    "install": "napa git://example.com/user/repo:privatepackage"
   }
 }
 ```
@@ -42,18 +42,7 @@ Now it will install to `node_modules/adifferentname`.
 ```json
 {
   "scripts": {
-    "install": "node_modules/.bin/napa user/repo1:dude user/repo2:rad user/repo3:cool"
-  }
-}
-```
-
-### Install globally
-If you don't like typing `node_modules/.bin` you can install this module globally with `npm install napa -g` then shorten to:
-
-```json
-{
-  "scripts": {
-    "install": "napa user/repo"
+    "install": "napa user/repo1:dude user/repo2:rad user/repo3:cool"
   }
 }
 ```
