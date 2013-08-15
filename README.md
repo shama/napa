@@ -48,7 +48,7 @@ Now it will install to `node_modules/adifferentname`.
 ```
 
 ### Install globally
-If you don't like typing `node_modules/bin` you can install this module globally with `npm install napa -g` then shorten to:
+If you don't like typing `node_modules/.bin` you can install this module globally with `npm install napa -g` then shorten to:
 
 ```json
 {
