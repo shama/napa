@@ -14,7 +14,7 @@ napa.cli = function(args, done) {
   }
   args.map(napa.args).map(napa.cmd).forEach(function(cmd) {
     total++
-    log.info('install', '%s into %s', cmd[2], path.relative(cwd, cmd[3]))
+    log.info('install', '%s into %s', cmd[cmd.length-2], path.relative(cwd, cmd[cmd.length-1]))
     rimraf(cmd[3], function(err) {
       if (err) return log.error(err)
       var git = spawn(cmd[0], cmd.slice(1))
@@ -49,5 +49,5 @@ napa.args = function(str) {
 }
 
 napa.cmd = function(repo) {
-  return ['git', 'clone', repo[0], path.join(cwd, 'node_modules', repo[1])]
+  return ['git', 'clone', '--depth', '1', repo[0], path.join(cwd, 'node_modules', repo[1])]
 }

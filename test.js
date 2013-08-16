@@ -12,6 +12,6 @@ test('args', function(t) {
 test('cmds', function(t) {
   t.plan(1)
   var cmd = napa.cmd(['git://github.com/user/repo', 'test'])
-  cmd[3] = path.relative(process.cwd(), cmd[3])
-  t.deepEqual(cmd, ['git', 'clone', 'git://github.com/user/repo', 'node_modules/test'])
+  cmd[cmd.length-1] = path.relative(process.cwd(), cmd[cmd.length-1])
+  t.deepEqual(cmd, ['git', 'clone', '--depth', '1', 'git://github.com/user/repo', 'node_modules/test'])
 })
