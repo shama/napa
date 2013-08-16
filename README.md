@@ -48,6 +48,7 @@ Now it will install to `node_modules/adifferentname`.
 ```
 
 ## Release History
+* 0.1.1 - --depth 1 for faster cloning
 * 0.1.0 - initial release
 
 ## License
