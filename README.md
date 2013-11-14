@@ -47,7 +47,22 @@ Now it will install to `node_modules/adifferentname`.
 }
 ```
 
+### Prefer a more structured approach?
+
+```json
+{
+  "scripts": {
+    "install": "napa"
+  },
+  "napa": {
+    "foo": "username/repo",
+    "bar": "git@example.com:user/repo"
+  }
+}
+```
+
 ## Release History
+* 0.2.0 - Ability to set packages using napa key in package.json
 * 0.1.1 - --depth 1 for faster cloning
 * 0.1.0 - initial release
 
