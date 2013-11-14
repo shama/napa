@@ -41,5 +41,9 @@
     "npm",
     "install",
     "assets"
-  ]
+  ],
+  "napa": {
+    "foo": "foo/repo",
+    "bar": "git://example.com/bar/repo"
+  }
 }
