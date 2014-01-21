@@ -3,7 +3,7 @@ A helper for installing repos without a `package.json` with npm.
 
 ## usage
 
-Install with `npm install napa` then setup your local `package.json` scripts as such:
+Install with `npm install napa --save-dev` then setup your local `package.json` scripts as such:
 
 ```json
 {
