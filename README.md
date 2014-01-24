@@ -61,7 +61,22 @@ Now it will install to `node_modules/adifferentname`.
 }
 ```
 
+### Looking to just download a tagged release on github or just a zip or tar.gz url?
+
+```json
+{
+  "scripts": {
+    "install": "napa"
+  },
+  "napa": {
+    "foo": "username/repo#v1.2.3",
+    "bar": "https://example.com/downloads/release.tar.gz"
+  }
+}
+```
+
 ## Release History
+* 0.3.0 - Ability to download packages using any URL
 * 0.2.0 - Ability to set packages using napa key in package.json
 * 0.1.1 - --depth 1 for faster cloning
 * 0.1.0 - initial release
