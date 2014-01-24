@@ -32,7 +32,8 @@
   },
   "dependencies": {
     "npmlog": "0.0.4",
-    "rimraf": "~2.2.2"
+    "rimraf": "~2.2.2",
+    "download": "~0.1.10"
   },
   "devDependencies": {
     "tape": "~1.0.4"
