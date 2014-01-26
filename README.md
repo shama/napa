@@ -71,7 +71,7 @@ Now it will install to `node_modules/adifferentname`.
   "napa": {
     "foo": "username/repo#v1.2.3",
     "bar": "username/bar#some-branch,
-    "baz": "username/baz#12fdf408g0g,
+    "baz": "username/baz#347259472813400c7a982690acaa516292a8be40,
     "qoo": "https://example.com/downloads/release.tar.gz"
   }
 }
