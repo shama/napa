@@ -29,7 +29,7 @@ napa.cli = function(args, done) {
         git.on('close', close)
       } else {
         // Download with download
-        var d = download(cmd[1], cmd[2], { extract: true })
+        var d = download(cmd[1], cmd[2], { extract: true, strip: 1 })
         d.on('error', log.error)
         d.on('close', close)
       }
