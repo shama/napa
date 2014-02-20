@@ -1,7 +1,7 @@
 {
   "name": "napa",
   "description": "A helper for installing repos without a package.json with npm.",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "homepage": "https://github.com/shama/napa",
   "author": {
     "name": "Kyle Robinson Young",
@@ -44,7 +44,6 @@
     "assets"
   ],
   "napa": {
-    "foo": "foo/repo",
-    "bar": "git://example.com/bar/repo"
+    "ember": "https://github.com/emberjs/ember.js/archive/v1.5.0-beta.1.tar.gz"
   }
 }

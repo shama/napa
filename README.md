@@ -78,6 +78,7 @@ Now it will install to `node_modules/adifferentname`.
 ```
 
 ## Release History
+* 0.4.0 - Add strip: 1 when downloading to avoid untarring within a sub-directory. Thanks @seei!
 * 0.3.0 - Ability to download packages using any URL
 * 0.2.0 - Ability to set packages using napa key in package.json
 * 0.1.1 - --depth 1 for faster cloning
