@@ -44,6 +44,7 @@
     "assets"
   ],
   "napa": {
+    "foo": "foo/repo",
     "ember": "https://github.com/emberjs/ember.js/archive/v1.5.0-beta.1.tar.gz"
   }
 }

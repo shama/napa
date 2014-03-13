@@ -29,6 +29,6 @@ test('cmds', function(t) {
 test('readpkg', function(t) {
   t.plan(1)
   var actual = napa.readpkg()
-  var expected = [['git://github.com/foo/repo', 'foo'], ['git://example.com/bar/repo', 'bar']]
+  var expected = [['git://github.com/foo/repo', 'foo'], ['https://github.com/emberjs/ember.js/archive/v1.5.0-beta.1.tar.gz', 'ember']]
   t.deepEqual(actual, expected)
 })
