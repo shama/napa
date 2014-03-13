@@ -24,6 +24,7 @@ napa.cli = function(args, done) {
       if (err) return log.error(err)
       if (cmd[0] === 'git') {
         // Download with git
+        cmd.push('-q')
         var git = spawn(cmd[0], cmd.slice(1))
         git.stderr.on('data', log.error)
         git.on('close', close)
