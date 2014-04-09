@@ -73,6 +73,14 @@ napa.url = function(url) {
 
 napa.cmd = function(repo) {
   var outpath = path.join(cwd, 'node_modules', repo[1])
+  /*
+    TODO: look at other url schemes,
+        git+
+            http://
+            https://
+            ssh://
+        ssh
+   */
   if (repo[0].slice(0, 6) === 'git://') {
     return ['git', 'clone', '--depth', '1', repo[0], outpath]
   } else {
