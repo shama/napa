@@ -7,7 +7,9 @@ test('args', function(t) {
   t.deepEqual(napa.args('user/repo'), ['git://github.com/user/repo', 'repo'])
   t.deepEqual(napa.args('https://github.com/user/repo:testing'), ['https://github.com/user/repo', 'testing'])
   t.deepEqual(napa.args('git://github.com/user/repo2'), ['git://github.com/user/repo2', 'repo2'])
-  t.deepEqual(napa.args('angular/angular.js#v1.2.3:angular'), ['https://github.com/angular/angular.js/archive/v1.2.3.tar.gz', 'angular'])
+  // when developing on windows, this returns zip, linux is tar.gz
+  t.deepEqual(napa.args('angular/angular.js#v1.2.3:angular'), ['https://github.com/angular/angular.js/archive/v1.2.3.'+ ((process.platform == 'win32') ? 'zip' : 'tar.gz'), 'angular'])
+
   t.deepEqual(napa.args('https://github.com/angular/angular.js/archive/master.zip:angular'), ['https://github.com/angular/angular.js/archive/master.zip', 'angular'])
 })
 
