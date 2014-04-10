@@ -14,15 +14,36 @@ test('args', function(t) {
 })
 
 test('cmds', function(t) {
-  t.plan(3)
+  t.plan(6);
+  // makes for friendly testing in windows and linux;
+  var testPath = ['node_modules','test'].join(path.sep);
+
+
   var cmd = napa.cmd(['git://github.com/user/repo', 'test'])
   cmd[cmd.length-1] = path.relative(process.cwd(), cmd[cmd.length-1])
-  t.deepEqual(cmd, ['git', 'clone', '--depth', '1', 'git://github.com/user/repo', 'node_modules/test'])
+  t.deepEqual(cmd, ['git', 'clone', '--depth', '1', 'git://github.com/user/repo', testPath])
 
   cmd = napa.cmd(['https://github.com/user/repo', 'test'])
   cmd[cmd.length-1] = path.relative(process.cwd(), cmd[cmd.length-1])
-  t.deepEqual(cmd, ['git', 'clone', '--depth', '1', 'https://github.com/user/repo', 'node_modules/test'])
+  t.deepEqual(cmd, ['git', 'clone', '--depth', '1', 'https://github.com/user/repo', testPath])
 
+  cmd = napa.cmd(['ssh://test.com/user/repo', 'test'])
+  cmd[cmd.length-1] = path.relative(process.cwd(), cmd[cmd.length-1])
+  t.deepEqual(cmd, ['git', 'clone', '--depth', '1', 'https://test.com/user/repo', testPath])
+
+
+
+  cmd = napa.cmd(['git+https://test.com/user/repo', 'test'])
+  cmd[cmd.length-1] = path.relative(process.cwd(), cmd[cmd.length-1])
+  t.deepEqual(cmd, ['git', 'clone', '--depth', '1', 'https://test.com/user/repo', testPath])
+
+
+  cmd = napa.cmd(['git+ssh://test.com/user/repo', 'test'])
+  cmd[cmd.length-1] = path.relative(process.cwd(), cmd[cmd.length-1])
+  t.deepEqual(cmd, ['git', 'clone', '--depth', '1', 'ssh://test.com/user/repo', testPath])
+
+
+// download
   cmd = napa.cmd(['https://github.com/angular/angular.js/archive/master.zip', 'angular'])
   cmd[cmd.length-1] = path.relative(process.cwd(), cmd[cmd.length-1])
   t.deepEqual(cmd, ['download', 'https://github.com/angular/angular.js/archive/master.zip', 'node_modules/angular'])
