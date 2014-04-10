@@ -1,4 +1,4 @@
-# napa [![Build Status](https://travis-ci.org/shama/napa.png?branch=master)](https://travis-ci.org/shama/napa)
+# napa [![Build Status](http://img.shields.io/travis/shama/napa.svg)](https://travis-ci.org/shama/napa) [![gittip.com/shama](http://img.shields.io/gittip/shama.svg)](https://www.gittip.com/shama)
 
 A helper for installing repos without a `package.json` with npm.
 
