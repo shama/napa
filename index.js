@@ -72,22 +72,22 @@ napa.url = function(url) {
 }
 
 napa.cmd = function(repo) {
-  var outpath = path.join(cwd, 'node_modules', repo[1])
-  /*
-    TODO: look at other url schemes,
-        git+
-            http://
-            https://
-            ssh://
-        ssh
-   */
-  if (repo[0].slice(0, 6) === 'git://') {
-    return ['git', 'clone', '--depth', '1', repo[0], outpath]
+  var outpath = path.join(cwd, 'node_modules', repo[1]);
+  // check see if ssh is needed
+  var useGit = ['git+', 'git://'];
+  var url = repo[0];
+  // all git urls need to have the git+ stripped
+  var gitCmd = ['git', 'clone', '--depth', '1', (repo[0].replace('git+','')), outpath];
+  
+// todo make sure that we can still use ssh, https and http to fetch things via download
+
+  if (useGit.indexOf(url.slice(0, 4)) !== -1 ) {
+    return gitCmd
   } else {
-    if (repo[0].indexOf('github.com') !== -1 && repo[0].indexOf('/archive/') === -1) {
-      return ['git', 'clone', '--depth', '1', repo[0], outpath]
+    if (url.indexOf('github.com') !== -1 &&url.indexOf('/archive/') === -1) {
+      return gitCmd
     }
-    return ['download', repo[0], outpath]
+    return ['download', url, outpath]
   }
 }
 

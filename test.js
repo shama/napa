@@ -14,11 +14,12 @@ test('args', function(t) {
 })
 
 test('cmds', function(t) {
-  t.plan(6);
+  t.plan(7);
   // makes for friendly testing in windows and linux;
   var testPath = ['node_modules','test'].join(path.sep);
 
 
+// if github is in the url then its treated like a git+ url
   var cmd = napa.cmd(['git://github.com/user/repo', 'test'])
   cmd[cmd.length-1] = path.relative(process.cwd(), cmd[cmd.length-1])
   t.deepEqual(cmd, ['git', 'clone', '--depth', '1', 'git://github.com/user/repo', testPath])
@@ -27,12 +28,12 @@ test('cmds', function(t) {
   cmd[cmd.length-1] = path.relative(process.cwd(), cmd[cmd.length-1])
   t.deepEqual(cmd, ['git', 'clone', '--depth', '1', 'https://github.com/user/repo', testPath])
 
-  cmd = napa.cmd(['ssh://test.com/user/repo', 'test'])
+// git+ works like npm install see https://www.npmjs.org/doc/cli/npm-install.html
+
+  cmd = napa.cmd(['git+http://test.com/user/repo', 'test'])
   cmd[cmd.length-1] = path.relative(process.cwd(), cmd[cmd.length-1])
-  t.deepEqual(cmd, ['git', 'clone', '--depth', '1', 'https://test.com/user/repo', testPath])
-
-
-
+  t.deepEqual(cmd, ['git', 'clone', '--depth', '1', 'http://test.com/user/repo', testPath])
+ 
   cmd = napa.cmd(['git+https://test.com/user/repo', 'test'])
   cmd[cmd.length-1] = path.relative(process.cwd(), cmd[cmd.length-1])
   t.deepEqual(cmd, ['git', 'clone', '--depth', '1', 'https://test.com/user/repo', testPath])
@@ -44,9 +45,15 @@ test('cmds', function(t) {
 
 
 // download
+
+  cmd = napa.cmd(['ssh://test.com/user/repo', 'test'])
+  cmd[cmd.length-1] = path.relative(process.cwd(), cmd[cmd.length-1])
+  t.deepEqual(cmd, ['download', 'ssh://test.com/user/repo', testPath])
+
+
   cmd = napa.cmd(['https://github.com/angular/angular.js/archive/master.zip', 'angular'])
   cmd[cmd.length-1] = path.relative(process.cwd(), cmd[cmd.length-1])
-  t.deepEqual(cmd, ['download', 'https://github.com/angular/angular.js/archive/master.zip', 'node_modules/angular'])
+  t.deepEqual(cmd, ['download', 'https://github.com/angular/angular.js/archive/master.zip', 'node_modules'+path.sep+'angular'])
 })
 
 test('readpkg', function(t) {
