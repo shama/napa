@@ -75,7 +75,9 @@ Now it will install to `node_modules/adifferentname`.
     "foo": "username/repo#v1.2.3",
     "bar": "username/bar#some-branch",
     "baz": "username/baz#347259472813400c7a982690acaa516292a8be40",
-    "qoo": "https://example.com/downloads/release.tar.gz"
+    "qoo": "https://example.com/downloads/release.tar.gz",
+    "fuz": "git+https://yourcompany.com/repos/project.git",
+    "goo": "git+ssh://yourcompany.com/repos/project.git"
   }
 }
 ```
