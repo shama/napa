@@ -72,19 +72,19 @@ napa.url = function(url) {
 }
 
 napa.cmd = function(repo) {
-  var outpath = path.join(cwd, 'node_modules', repo[1]);
+  var outpath = path.join(cwd, 'node_modules', repo[1])
   
   // is this a git repo url?
-  var gitUrls = ['git+', 'git://'];
-  var url = repo[0];
+  var gitUrls = ['git+', 'git://']
+  var url = repo[0]
   
   // all git urls need to have the git+ stripped
-  var gitCmd = ['git', 'clone', '--depth', '1', (repo[0].replace('git+','')), outpath];
+  var gitCmd = ['git', 'clone', '--depth', '1', (repo[0].replace('git+', '')), outpath]
 
   if (gitUrls.indexOf(url.slice(0, 4)) !== -1) {
     return gitCmd
   } else {
-    if (url.indexOf('github.com') !== -1 &&url.indexOf('/archive/') === -1) {
+    if (url.indexOf('github.com') !== -1 && url.indexOf('/archive/') === -1) {
       return gitCmd
     }
     return ['download', url, outpath]
