@@ -27,8 +27,8 @@ test('args', function(t) {
 })
 
 test('cmds', function(t) {
-  t.plan(7);
-  var testPath = path.resolve('node_modules', 'test');
+  t.plan(7)
+  var testPath = path.resolve('node_modules', 'test')
   var pkg = null
 
   function assertPkg(url, name, cb) {
