@@ -1,10 +1,7 @@
-var spawn = require('child_process').spawn
 var path = require('path')
 var fs = require('fs')
-var log = require('npmlog')
-var rimraf = require('rimraf')
-var download = require('download')
 var cwd = process.cwd()
+var Pkg = require('./lib/pkg')
 
 var napa = module.exports = {}
 
@@ -17,24 +14,10 @@ napa.cli = function(args, done) {
   pkg = napa.readpkg()
   if (pkg) args = args.map(napa.args).concat(pkg)
   else args = args.map(napa.args)
-  args.map(napa.cmd).forEach(function(cmd) {
+  args.forEach(function(cmd) {
     total++
-    log.info('install', '%s into %s', cmd[cmd.length-2], path.relative(cwd, cmd[cmd.length-1]))
-    rimraf(cmd[cmd.length-1], function(err) {
-      if (err) return log.error(err)
-      if (cmd[0] === 'git') {
-        // Download with git
-        cmd.push('-q')
-        var git = spawn(cmd[0], cmd.slice(1))
-        git.stderr.on('data', log.error)
-        git.on('close', close)
-      } else {
-        // Download with download
-        var d = download(cmd[1], cmd[2], { extract: true, strip: 1 })
-        d.on('error', log.error)
-        d.on('close', close)
-      }
-    })
+    var pkg = new Pkg(cmd[0], cmd[1])
+    pkg.install(close)
   })
 }
 
@@ -60,6 +43,10 @@ napa.args = function(str) {
 }
 
 napa.url = function(url) {
+  if (typeof url !== 'string') {
+    if (url.url) url = url.url
+    else return false
+  }
   if (url.indexOf('#') !== -1 && url.indexOf('://') === -1) {
     var s = url.split('#')
     url = 'https://github.com/' + s[0] + '/archive/' + s[1]
@@ -69,26 +56,6 @@ napa.url = function(url) {
   if (url.slice(0, 1) === '/') url = url.slice(1)
   if (url.indexOf('://') === -1) url = 'git://github.com/' + url
   return url
-}
-
-napa.cmd = function(repo) {
-  var outpath = path.join(cwd, 'node_modules', repo[1])
-  
-  // is this a git repo url?
-  var gitUrls = ['git+', 'git://']
-  var url = repo[0]
-  
-  // all git urls need to have the git+ stripped
-  var gitCmd = ['git', 'clone', '--depth', '1', (repo[0].replace('git+', '')), outpath]
-
-  if (gitUrls.indexOf(url.slice(0, 4)) !== -1) {
-    return gitCmd
-  } else {
-    if (url.indexOf('github.com') !== -1 && url.indexOf('/archive/') === -1) {
-      return gitCmd
-    }
-    return ['download', url, outpath]
-  }
 }
 
 napa.readpkg = function() {

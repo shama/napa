@@ -27,13 +27,17 @@
   "bin": {
     "napa": "bin/napa"
   },
+  "main": "lib/pkg.js",
   "scripts": {
     "test": "node test"
   },
   "dependencies": {
+    "download": "^3.0.1",
+    "mkdirp": "^0.5.0",
+    "npm-cache-filename": "^1.0.1",
     "npmlog": "0.0.4",
-    "rimraf": "~2.2.2",
-    "download": "~0.1.10"
+    "rimraf": "^2.2.8",
+    "tar-pack": "^2.0.0"
   },
   "devDependencies": {
     "tape": "~1.0.4"
@@ -45,6 +49,7 @@
   ],
   "napa": {
     "foo": "foo/repo",
-    "ember": "https://github.com/emberjs/ember.js/archive/v1.5.0-beta.1.tar.gz"
+    "ember": "https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz",
+    "handlebars": "components/handlebars.js"
   }
 }
