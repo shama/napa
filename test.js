@@ -1,4 +1,4 @@
-var napa = require('./index.js')
+var napa = require('./cli.js')
 var Pkg = require('./lib/pkg')
 var test = require('tape')
 var path = require('path')
