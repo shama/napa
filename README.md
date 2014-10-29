@@ -83,6 +83,7 @@ Now it will install to `node_modules/adifferentname`.
 ```
 
 ## Release History
+* 1.0.2 - Fix references to git specifiers. Thanks @jsdevel!
 * 1.0.1 - Fix path to cli.
 * 1.0.0 - Avoids duplicate installs and will install from cache.
 * 0.4.1 - Fix git reporting non-errors on stderr by running in quiet mode.
