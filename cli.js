@@ -16,7 +16,7 @@ napa.cli = function(args, done) {
   else args = args.map(napa.args)
   args.forEach(function(cmd) {
     total++
-    var pkg = new Pkg(cmd[0], cmd[1])
+    var pkg = new Pkg(cmd[0], cmd[1], {ref: cmd[2]})
     pkg.install(close)
   })
 }
@@ -39,7 +39,7 @@ napa.args = function(str) {
   }
 
   if (!name) name = url.slice(url.lastIndexOf('/') + 1)
-  return [napa.url(url), name]
+  return [napa.url(url), name, napa.getref(str)]
 }
 
 napa.url = function(url) {
@@ -47,11 +47,15 @@ napa.url = function(url) {
     if (url.url) url = url.url
     else return false
   }
-  if (url.indexOf('#') !== -1 && url.indexOf('://') === -1) {
-    var s = url.split('#')
-    url = 'https://github.com/' + s[0] + '/archive/' + s[1]
-    if (process.platform === 'win32') url += '.zip'
-    else url += '.tar.gz'
+  if (url.indexOf('#') !== -1) {
+    if (url.indexOf('://') === -1) {
+      var s = url.split('#')
+      url = 'https://github.com/' + s[0] + '/archive/' + s[1]
+      if (process.platform === 'win32') url += '.zip'
+      else url += '.tar.gz'
+    } else {
+      url = url.replace(/#.*?$/, '')
+    }
   }
   if (url.slice(0, 1) === '/') url = url.slice(1)
   if (url.indexOf('://') === -1) url = 'git://github.com/' + url
@@ -64,6 +68,10 @@ napa.readpkg = function() {
   pkg = require(pkg)
   if (!pkg.hasOwnProperty('napa')) return false
   return Object.keys(pkg.napa).map(function(key) {
-    return [napa.url(pkg.napa[key]), key]
+    return [napa.url(pkg.napa[key]), key, napa.getref(pkg.napa[key])]
   })
+}
+
+napa.getref = function(url) {
+  return url.replace(/^[^#]*#?/, '')
 }
