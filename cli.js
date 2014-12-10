@@ -3,7 +3,6 @@ var fs = require('fs')
 var cwd = process.cwd()
 var Pkg = require('./lib/pkg')
 var nopt = require("nopt")
-var log = require('npmlog')
 
 var knownOpts = {
   cache: Boolean,
