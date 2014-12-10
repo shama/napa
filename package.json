@@ -51,6 +51,6 @@
   "napa": {
     "foo": "foo/repo",
     "ember": "https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz",
-    "handlebars": "components/handlebars.js",
+    "handlebars": "components/handlebars.js"
   }
 }
