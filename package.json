@@ -1,7 +1,7 @@
 {
   "name": "napa",
   "description": "A helper for installing repos without a package.json with npm.",
-  "version": "1.1.0",
+  "version": "1.0.2",
   "homepage": "https://github.com/shama/napa",
   "author": {
     "name": "Kyle Robinson Young",
@@ -34,6 +34,7 @@
   "dependencies": {
     "download": ">=3.2.0 <3.3.0-0",
     "mkdirp": ">=0.5.0 <0.6.0-0",
+    "nopt": ">=3.0.0 <3.1.0-0",
     "npm-cache-filename": ">=1.0.1 <1.1.0-0",
     "npmlog": ">=0.1.1 <0.2.0-0",
     "rimraf": ">=2.2.8 <2.3.0-0",
@@ -50,6 +51,6 @@
   "napa": {
     "foo": "foo/repo",
     "ember": "https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz",
-    "handlebars": "components/handlebars.js"
+    "handlebars": "components/handlebars.js",
   }
 }

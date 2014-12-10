@@ -2,6 +2,23 @@ var path = require('path')
 var fs = require('fs')
 var cwd = process.cwd()
 var Pkg = require('./lib/pkg')
+var nopt = require("nopt")
+var log = require('npmlog')
+
+var knownOpts = {
+  cache: Boolean,
+  force: Boolean
+};
+var shortOpts = {
+  c: ['--cache'],
+  C: ['--no-cache'],
+  f: ['--force'],
+  F: ['--no-force']
+};
+var defaultOpts =  {
+  cache: true,
+  force: false
+};
 
 var napa = module.exports = {}
 
@@ -11,12 +28,31 @@ napa.cli = function(args, done) {
     if (total < 1) return done()
     total--
   }
-  pkg = napa.readpkg()
-  if (pkg) args = args.map(napa.args).concat(pkg)
-  else args = args.map(napa.args)
+
+  /* parse process.argv to get options, like --no-cache, ... */
+  var execOpts = nopt(knownOpts, shortOpts, process.argv, 2);
+  for (var i in defaultOpts) {
+    if (!execOpts.hasOwnProperty(i)){
+      execOpts[i] = defaultOpts[i];
+    }
+  };
+  args = execOpts.argv.remain;
+
+  var pkg;
+  /* check package.json only if no arg */
+  if (0 === args.length) {
+    pkg = napa.readpkg()
+  }
+
+  if (pkg) {
+    args = args.map(napa.args).concat(pkg)
+  } else {
+    args = args.map(napa.args)
+  }
+
   args.forEach(function(cmd) {
     total++
-    var pkg = new Pkg(cmd[0], cmd[1], {ref: cmd[2]})
+    var pkg = new Pkg(cmd[0], cmd[1], {ref: cmd[2], exec: execOpts})
     pkg.install(close)
   })
 }
