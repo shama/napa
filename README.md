@@ -82,11 +82,13 @@ Now it will install to `node_modules/adifferentname`.
 }
 ```
 
-### Deactivate internal cache? Force re-installation ?
+### Deactivate internal cache? Force re-installation ? Ignore `package.json` configuration
 
 - `--cache` (or `--no-cache`) : _Default : true_. Activate or deactivate internal cache and force napa to download from external source. Downloaded packages will neither be saved after install.
 
 - `--force` (or `--no-force`) : _Default : false_. If package is already installed, force napa to delete and reinstall.
+
+- `--pkg` (or `--no-pkg`) : _Default : true. `--no-pkg` could be usefull if you pass a repo as a parameter and do not want to use the `napa` property of the local `package.json`.
 
 Usage :
 
@@ -110,6 +112,23 @@ or
   }
 }
 ```
+
+About `--no-pgk` option :
+
+```json
+{
+  "scripts": {
+    "install": "napa --no-pkg username/repo" 
+  },
+  "napa": {
+    "bar": "foo/bar" 
+  }
+}
+// username/repo will be added to node_modules/ (it is passed as a command line parameter)
+// foo/bar will be ignored since the --no-pkg option is used
+
+```
+
 
 ## Release History
 * 1.1.0 - Upgrade download for better downloads behind proxies (@msieurtoph).
