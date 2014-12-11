@@ -4,6 +4,7 @@ var test = require('tape')
 var path = require('path')
 var fs = require('fs')
 var rimraf = require('rimraf')
+var options = require('./config.js')
 
 function clean(filepaths, done) {
   var count = filepaths.length
@@ -15,6 +16,40 @@ function clean(filepaths, done) {
      rimraf(filepaths[i], cb)
   }
 }
+
+test('config', function(t) {
+  var config;
+  function removeArgv(o){
+    delete o.argv;
+    return o;
+  };
+
+  config = napa.config();
+  t.deepEqual(removeArgv(config.opts), napa.defaultOpts);
+
+  config = napa.config('foobar'.split(' '));
+  t.deepEqual(removeArgv(config.opts), napa.defaultOpts);
+  t.deepEqual(config.args, ['foobar']);
+
+  config = napa.config('--no-cache foobar --force barfoo'.split(' '));
+  t.deepEqual(config.args, ['foobar', 'barfoo']);
+
+  config = napa.config('--no-cache --force --no-pkg --unknown-option'.split(' '));
+  t.deepEqual(config.opts.cache, false);
+  t.deepEqual(config.opts.force, true);
+  t.deepEqual(config.opts.pkg, false);
+  t.deepEqual(config.opts['unknown-option'], true);
+  t.deepEqual(config.opts.invalidOption, undefined);
+
+  config = napa.config('-C -f -P -u'.split(' '));
+  t.deepEqual(config.opts.cache, false);
+  t.deepEqual(config.opts.force, true);
+  t.deepEqual(config.opts.pkg, false);
+  t.deepEqual(config.opts.u, true);
+  t.deepEqual(config.opts.i, undefined);
+
+  t.end()
+})
 
 test('args', function(t) {
   t.plan(5)
@@ -32,7 +67,7 @@ test('cmds', function(t) {
   var pkg = null
 
   function assertPkg(url, name, cb) {
-    pkg = new Pkg(url, name, { _mock: cb })
+    pkg = new Pkg(url, name, { _mock: cb, exec: options || {} })
     pkg.install()
   }
 
@@ -79,7 +114,7 @@ test('pkg install', function(t) {
   t.plan(8)
   var url = 'https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz'
   var pkgName = 'ember'
-  var pkg = new Pkg(url, pkgName)
+  var pkg = new Pkg(url, pkgName, {exec: options || {}})
   clean([pkg.cacheTo, pkg.installTo], function() {
     pkg.install(function() {
       t.ok(fs.existsSync(pkg.installTo), 'file was installed to node_modules')
@@ -88,7 +123,7 @@ test('pkg install', function(t) {
       t.ok(pkg.cached, 'pkg says it was cached')
       // Delete pkg and install again
       clean([pkg.installTo], function() {
-        pkg = new Pkg(url, pkgName)
+        pkg = new Pkg(url, pkgName, {exec: options || {}})
         t.ok(!pkg.installed, 'pkg says not installed after deleted')
         t.ok(fs.existsSync(pkg.cacheTo), 'pkg deleted but cache remains')
         pkg.install(function() {
@@ -103,12 +138,12 @@ test('pkg install', function(t) {
 test('pkg install different version', function(t) {
   t.plan(2)
   var result = null
-  var pkg = new Pkg('https://github.com/emberjs/ember.js/archive/v1.6.0.tar.gz', 'ember')
+  var pkg = new Pkg('https://github.com/emberjs/ember.js/archive/v1.6.0.tar.gz', 'ember', {exec: options || {}})
   pkg.install(function() {
     result = require(path.resolve(pkg.installTo, 'package.json'))[pkg._napaResolvedKey]
     t.equal(result, 'https://github.com/emberjs/ember.js/archive/v1.6.0.tar.gz', 'should have installed the older version')
 
-    pkg = new Pkg('https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz', 'ember')
+    pkg = new Pkg('https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz', 'ember', {exec: options || {}})
     pkg.install(function() {
       result = require(path.resolve(pkg.installTo, 'package.json'))[pkg._napaResolvedKey]
       t.equal(result, 'https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz', 'should have installed the newer version')
@@ -119,11 +154,70 @@ test('pkg install different version', function(t) {
 test('pkg install with ref', function(t) {
   t.plan(1)
   var result = null
-  var pkg = new Pkg('https://github.com/twbs/bootstrap', 'bootstrap', {ref: 'v3.3.0'})
+  var pkg = new Pkg('https://github.com/twbs/bootstrap', 'bootstrap', {ref: 'v3.3.0'}, {exec: options || {}})
 
   clean([pkg.cacheTo, pkg.installTo], function() {
     pkg.install(function(err) {
       t.notOk(err, 'no error should occur')
     })
   })
+})
+
+test('caching', function(t) {
+  var url = 'https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz'
+  var pkgName = 'ember'
+
+  function saveToCache(){
+    var config = napa.config('--cache'.split(' '));
+    var pkg = new Pkg(url, pkgName, {exec: config.opts})
+    clean([pkg.cacheTo, pkg.installTo], function() {
+      pkg.install(function() {
+        t.equal(pkg.method, 'download', 'pkg says it downloaded');
+        t.ok(fs.existsSync(pkg.cacheTo), 'file was cached')
+        t.ok(pkg.cached, 'pkg says it was cached')
+        getFromCache()
+      })
+    })
+  }
+
+  function getFromCache(){
+    var config = napa.config('--cache'.split(' '));
+    var pkg = new Pkg(url, pkgName, {exec: config.opts})
+    clean([pkg.installTo], function() {
+      pkg.install(function() {
+        t.equal(pkg.method, 'cache', 'pkg says it used cache');
+        t.ok(fs.existsSync(pkg.cacheTo), 'file was (still) cached')
+        t.ok(pkg.cached, 'pkg says it was cached')
+        dontGetFromCache()
+      })
+    })
+  }
+
+  function dontGetFromCache(){
+    var config = napa.config('--no-cache'.split(' '));
+    var pkg = new Pkg(url, pkgName, {exec: config.opts})
+    clean([pkg.installTo], function() {
+      pkg.install(function() {
+        t.equal(pkg.method, 'download', 'pkg says it downloaded');
+        t.ok(fs.existsSync(pkg.cacheTo), 'file was cached (but it comes from previous usage)')
+        t.notOk(pkg.cached, 'pkg says it was not cached (at least, it wont use it)')
+        dontSaveToCache()
+      })
+    })
+  }
+
+  function dontSaveToCache(){
+    var config = napa.config('--no-cache'.split(' '));
+    var pkg = new Pkg(url, pkgName, {exec: config.opts})
+    clean([pkg.installTo, pkg.cacheTo], function() {
+      pkg.install(function() {
+        t.equal(pkg.method, 'download', 'pkg says it downloaded');
+        t.notOk(fs.existsSync(pkg.cacheTo), 'file was not cached')
+        t.notOk(pkg.cached, 'pkg says it was not cached')
+        t.end()
+     })
+    })
+  }
+
+  saveToCache()
 })

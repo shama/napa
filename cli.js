@@ -4,56 +4,63 @@ var cwd = process.cwd()
 var Pkg = require('./lib/pkg')
 var nopt = require("nopt")
 
-var knownOpts = {
+var napa = module.exports = {}
+
+napa.knownOpts = {
   cache: Boolean,
-  force: Boolean
+  force: Boolean,
+  pkg: Boolean
 };
-var shortOpts = {
+napa.shortOpts = {
   c: ['--cache'],
   C: ['--no-cache'],
   f: ['--force'],
-  F: ['--no-force']
+  F: ['--no-force'],
+  p: ['--pkg'],
+  P: ['--no-pkg']
 };
-var defaultOpts =  {
-  cache: true,
-  force: false
-};
+napa.defaultOpts = require('./config.js')
 
-var napa = module.exports = {}
 
-napa.cli = function(args, done) {
+napa.cli = function(params, done) {
   var total = 0
   function close() {
     if (total < 1) return done()
     total--
   }
 
-  /* parse process.argv to get options, like --no-cache, ... */
-  var execOpts = nopt(knownOpts, shortOpts, process.argv, 2);
-  for (var i in defaultOpts) {
-    if (!execOpts.hasOwnProperty(i)){
-      execOpts[i] = defaultOpts[i];
-    }
-  };
-  args = execOpts.argv.remain;
+  var config = napa.config(params),
+      pkg, args;
 
-  var pkg;
-  /* check package.json only if no arg */
-  if (0 === args.length) {
+  if (config.opts.pkg) {
     pkg = napa.readpkg()
   }
 
   if (pkg) {
-    args = args.map(napa.args).concat(pkg)
+    args = config.args.map(napa.args).concat(pkg)
   } else {
-    args = args.map(napa.args)
+    args = config.args.map(napa.args)
   }
 
   args.forEach(function(cmd) {
     total++
-    var pkg = new Pkg(cmd[0], cmd[1], {ref: cmd[2], exec: execOpts})
+    var pkg = new Pkg(cmd[0], cmd[1], {ref: cmd[2], exec: config.opts})
     pkg.install(close)
   })
+}
+
+napa.config = function(args){
+  /* parse args to separate options and real args */
+  var opts = nopt(napa.knownOpts, napa.shortOpts, args || [], 0);
+  for (var i in napa.defaultOpts) {
+    if (!opts.hasOwnProperty(i)){
+      opts[i] = napa.defaultOpts[i];
+    }
+  };
+  return  {
+    args: opts.argv.remain,
+    opts: opts
+  }
 }
 
 napa.args = function(str) {
