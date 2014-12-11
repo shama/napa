@@ -113,7 +113,7 @@ or
 }
 ```
 
-About `--no-pgk` option :
+About `--no-pkg` option :
 
 ```json
 {
