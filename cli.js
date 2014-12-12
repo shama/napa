@@ -2,7 +2,10 @@ var path = require('path')
 var fs = require('fs')
 var cwd = process.cwd()
 var Pkg = require('./lib/pkg')
-var nopt = require("nopt")
+var nopt = require('nopt')
+var url = require('url-parse')
+var path = require('path')
+var slash = require('slash')
 
 var napa = module.exports = {}
 
@@ -37,10 +40,9 @@ napa.cli = function(params, done) {
   }
 
   if (pkg) {
-    args = config.args.map(napa.args).concat(pkg)
-  } else {
-    args = config.args.map(napa.args)
+    config.args = config.args.concat(pkg)
   }
+  args = config.args.map(napa.args)
 
   args.forEach(function(cmd) {
     total++
@@ -63,45 +65,48 @@ napa.config = function(args){
   }
 }
 
-napa.args = function(str) {
-  var url, name
-  var split = str.split(':')
-  if (split.length === 3) {
-    name = split[2]
-    url = split.slice(0, 2).join(':')
-  } else if (split.length === 2) {
-    if (split[1].slice(0, 2) === '//') {
-      url = split.join(':')
-    } else {
-      url = split[0]
-      name = split[1]
-    }
-  } else {
-    url = split.join(':')
-  }
+napa.args = function(str){
+  var parsed = url(str);
+  var parsedPath, name, version;
 
-  if (!name) name = url.slice(url.lastIndexOf('/') + 1)
-  return [napa.url(url), name, napa.getref(str)]
-}
-
-napa.url = function(url) {
-  if (typeof url !== 'string') {
-    if (url.url) url = url.url
-    else return false
-  }
-  if (url.indexOf('#') !== -1) {
-    if (url.indexOf('://') === -1) {
-      var s = url.split('#')
-      url = 'https://github.com/' + s[0] + '/archive/' + s[1]
-      if (process.platform === 'win32') url += '.zip'
-      else url += '.tar.gz'
+  //get module final name and version !
+    // get name and version in parsed.hash (if version is provided)
+    if ('' !== parsed.hash) {
+      parsedPath = parsed.hash.match(/(.*):(.*)/)
+      if (parsedPath) {
+        name = parsedPath[2];
+        version = parsedPath[1].slice(1);
+      } else {
+        version = parsed.hash.slice(1);
+      }
+      parsed.set('hash', '');
+    // else, get name in parsed.pathname
     } else {
-      url = url.replace(/#.*?$/, '')
+      parsedPath = parsed.pathname.match(/(.*):(.*)/)
+      if (parsedPath) {
+        name = parsedPath[2];
+        parsed.set('pathname', parsedPath[1])
+      }
     }
-  }
-  if (url.slice(0, 1) === '/') url = url.slice(1)
-  if (url.indexOf('://') === -1) url = 'git://github.com/' + url
-  return url
+    // if !name, get it from parsed.pathname
+    if (!name){
+      name = path.basename(parsed.pathname);
+    }
+
+  //set full pathname if there is no hostname
+    if ('' === parsed.hostname){
+      parsed.set('host', 'github.com')
+      parsed.set('hostname', 'github.com')
+      parsed.set('protocol', 'git:')
+      parsed.set('pathname', slash(path.join('/', parsed.pathname))) // to deal with first slash
+      if (!!version){
+        parsed.set('protocol', 'https:')
+        parsed.set('pathname', slash(path.join(parsed.pathname, 'archive', version + (process.platform === 'win32' ? '.zip' : '.tar.gz' ))))
+      }
+    }
+
+  return [parsed.toString(), name, version || '']
+
 }
 
 napa.readpkg = function() {
@@ -110,10 +115,6 @@ napa.readpkg = function() {
   pkg = require(pkg)
   if (!pkg.hasOwnProperty('napa')) return false
   return Object.keys(pkg.napa).map(function(key) {
-    return [napa.url(pkg.napa[key]), key, napa.getref(pkg.napa[key])]
+    return pkg.napa[key]+':'+key
   })
-}
-
-napa.getref = function(url) {
-  return url.replace(/^[^#]*#?/, '')
 }

@@ -17,6 +17,7 @@ function clean(filepaths, done) {
   }
 }
 
+
 test('config', function(t) {
   var config;
   function removeArgv(o){
@@ -52,13 +53,15 @@ test('config', function(t) {
 })
 
 test('args', function(t) {
-  t.plan(5)
   t.deepEqual(napa.args('user/repo'), ['git://github.com/user/repo', 'repo', ''])
+  // when developing on windows, this returns zip, linux is tar.gz
+  t.deepEqual(napa.args('user/repo#0.1.2'), ['https://github.com/user/repo/archive/0.1.2.' + ((process.platform === 'win32') ? 'zip' : 'tar.gz'), 'repo', '0.1.2'])
   t.deepEqual(napa.args('https://github.com/user/repo:testing'), ['https://github.com/user/repo', 'testing', ''])
   t.deepEqual(napa.args('git://github.com/user/repo2'), ['git://github.com/user/repo2', 'repo2', ''])
-  // when developing on windows, this returns zip, linux is tar.gz
-  t.deepEqual(napa.args('angular/angular.js#v1.2.3:angular'), ['https://github.com/angular/angular.js/archive/v1.2.3.' + ((process.platform === 'win32') ? 'zip' : 'tar.gz'), 'angular', 'v1.2.3:angular'])
+  t.deepEqual(napa.args('angular/angular.js#v1.2.3:angular'), ['https://github.com/angular/angular.js/archive/v1.2.3.' + ((process.platform === 'win32') ? 'zip' : 'tar.gz'), 'angular', 'v1.2.3'])
   t.deepEqual(napa.args('https://github.com/angular/angular.js/archive/master.zip:angular'), ['https://github.com/angular/angular.js/archive/master.zip', 'angular', ''])
+  t.deepEqual(napa.args('http://localhost:1234/user/repo2:foobar'), ['http://localhost:1234/user/repo2', 'foobar', ''])
+  t.end()
 })
 
 test('cmds', function(t) {
@@ -103,9 +106,9 @@ test('readpkg', function(t) {
   t.plan(1)
   var actual = napa.readpkg()
   var expected = [
-    ['git://github.com/foo/repo', 'foo', ''],
-    ['https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz', 'ember', ''],
-    ['git://github.com/components/handlebars.js', 'handlebars', ''],
+    'foo/repo#1.2.3:foo',
+    'https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz:ember',
+    'components/handlebars.js:handlebars',
   ]
   t.deepEqual(actual, expected)
 })
