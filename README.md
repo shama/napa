@@ -88,7 +88,7 @@ Now it will install to `node_modules/adifferentname`.
 
 - `--force` (or `--no-force`) : _Default : false_. If package is already installed, force napa to delete and reinstall.
 
-- `--pkg` (or `--no-pkg`) : _Default : true. `--no-pkg` could be usefull if you pass a repo as a parameter and do not want to use the `napa` property of the local `package.json`.
+- `--pkg` (or `--no-pkg`) : _Default : true. `--no-pkg` could be usefull during dev or test phases. If you pass a repo as a parameter and do not want to use the `napa` property of the local `package.json`.
 
 Usage :
 
