@@ -8,8 +8,8 @@ var napa = module.exports = {}
 napa.cli = function(args, done) {
   var total = 0
   function close() {
-    if (total < 1) return done()
     total--
+    if (total < 1) return done()
   }
   pkg = napa.readpkg()
   if (pkg) args = args.map(napa.args).concat(pkg)
