@@ -34,10 +34,13 @@
   "dependencies": {
     "download": ">=3.2.0 <3.3.0-0",
     "mkdirp": ">=0.5.0 <0.6.0-0",
+    "nopt": ">=3.0.0 <3.1.0-0",
     "npm-cache-filename": ">=1.0.1 <1.1.0-0",
     "npmlog": ">=0.1.1 <0.2.0-0",
     "rimraf": ">=2.2.8 <2.3.0-0",
-    "tar-pack": ">=2.0.0 <2.1.0-0"
+    "slash": ">=1.0.0 <1.1.0-0",
+    "tar-pack": ">=2.0.0 <2.1.0-0",
+    "url-parse": ">=0.2.0 <0.3.0-0"
   },
   "devDependencies": {
     "tape": ">=3.0.0 <3.1.0-0"
@@ -48,7 +51,7 @@
     "assets"
   ],
   "napa": {
-    "foo": "foo/repo",
+    "foo": "foo/repo#1.2.3",
     "ember": "https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz",
     "handlebars": "components/handlebars.js"
   }
