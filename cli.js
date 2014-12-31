@@ -6,6 +6,7 @@ var Pkg = require('./lib/pkg')
 var napa = module.exports = {}
 
 napa.cli = function(args, done) {
+  done = done || function() {}
   var total = 0
   function close() {
     total--
