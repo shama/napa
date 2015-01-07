@@ -83,6 +83,7 @@ Now it will install to `node_modules/adifferentname`.
 ```
 
 ## Release History
+* 1.2.0 - Callback optional with cli and do not ignore .gitignore files when unpacking (@dai-shi).
 * 1.1.0 - Upgrade download for better downloads behind proxies (@msieurtoph).
 * 1.0.2 - Fix references to git specifiers. Thanks @jsdevel!
 * 1.0.1 - Fix path to cli.
