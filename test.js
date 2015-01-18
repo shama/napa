@@ -27,7 +27,7 @@ test('args', function(t) {
 })
 
 test('cmds', function(t) {
-  t.plan(7)
+  t.plan(8)
   var testPath = path.resolve('node_modules', 'test')
   var pkg = null
 
@@ -61,6 +61,9 @@ test('cmds', function(t) {
   })
   assertPkg('https://github.com/angular/angular.js/archive/master.zip', 'angular', function(result) {
     t.deepEqual(result, ['download', 'https://github.com/angular/angular.js/archive/master.zip', path.resolve('node_modules', 'angular')])
+  })
+  assertPkg('https://github.com/yahoo/pure/releases/download/v0.5.0/pure-0.5.0.tar.gz', 'pure', function(result) {
+    t.deepEqual(result, ['download', 'https://github.com/yahoo/pure/releases/download/v0.5.0/pure-0.5.0.tar.gz', path.resolve('node_modules', 'pure')])
   })
 })
 
