@@ -126,7 +126,7 @@ test('pkg install different version', function(t) {
 test('pkg install with ref', function(t) {
   t.plan(1)
   var result = null
-  var pkg = new Pkg('https://github.com/twbs/bootstrap', 'bootstrap', {ref: 'v3.3.0'})
+  var pkg = new Pkg('https://github.com/gdsmith/jquery.easing', 'jquery.easing', {ref: '1.3.1'})
 
   clean([pkg.cacheTo, pkg.installTo], function() {
     pkg.install(function(err) {
