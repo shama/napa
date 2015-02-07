@@ -79,16 +79,20 @@ test('readpkg', function(t) {
 })
 
 test('pkg install', function(t) {
-  t.plan(8)
+  t.plan(11)
   var url = 'https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz'
   var pkgName = 'ember'
   var pkg = new Pkg(url, pkgName)
   clean([pkg.cacheTo, pkg.installTo], function() {
     pkg.install(function() {
+      var packagePath, package;
       t.ok(fs.existsSync(pkg.installTo), 'file was installed to node_modules')
       t.ok(pkg.installed, 'pkg says it was installed')
       t.ok(fs.existsSync(pkg.cacheTo), 'file was cached')
       t.ok(pkg.cached, 'pkg says it was cached')
+      t.ok(fs.existsSync(packagePath = path.resolve(pkg.installTo, 'package.json')), 'package.json has been generated')
+      t.ok((package = require(packagePath)) && package.name && package.version, 'package.json has required fields')
+      t.ok(package && package.description && package.readme && package.repository && package.repository.type, 'package.json has recommended fields')
       // Delete pkg and install again
       clean([pkg.installTo], function() {
         pkg = new Pkg(url, pkgName)
