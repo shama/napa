@@ -120,13 +120,17 @@ test('pkg install different version', function(t) {
 })
 
 test('pkg install with ref', function(t) {
-  t.plan(1)
+  t.plan(4)
   var result = null
-  var pkg = new Pkg('https://github.com/twbs/bootstrap', 'bootstrap', {ref: 'v3.3.0'})
+  var pkg = new Pkg('https://github.com/gdsmith/jquery.easing', 'jquery.easing', {ref: '1.3.1'})
 
   clean([pkg.cacheTo, pkg.installTo], function() {
     pkg.install(function(err) {
+      var packagePath, package;
       t.notOk(err, 'no error should occur')
+      t.ok(fs.existsSync(packagePath = path.resolve(pkg.installTo, 'package.json')), 'package.json has been generated')
+      t.ok((package = require(packagePath)) && package.name && package.version, 'package.json has required fields')
+      t.ok(package && package.description && package.readme && package.repository && package.repository.type, 'package.json has recommended fields')
     })
   })
 })
