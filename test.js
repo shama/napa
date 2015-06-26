@@ -101,7 +101,7 @@ test('cache-path', function(t) {
   var url = 'https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz'
   var pkgName = 'ember'
   var pkg = new Pkg(url, pkgName, {'cache-path': '/.napa-cache'})
-  t.equal(pkg.cacheTo,'/.napa-cache/github.com/emberjs/ember.js/archive/v1.7.0.tar.gz', 'The cache path matches.')
+  t.ok(pkg.cacheTo.indexOf('.napa-cache/github.com/emberjs/ember.js/archive/v1.7.0.tar.gz') !== -1, 'The cache path matches.')
 
   pkg = new Pkg(url, pkgName, {'cache-path': './.napa-cache'})
   clean([pkg.cacheTo, pkg.installTo], function() {
