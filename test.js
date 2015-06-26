@@ -78,6 +78,42 @@ test('readpkg', function(t) {
   t.deepEqual(actual, expected)
 })
 
+test('readconfig', function(t) {
+  t.plan(1)
+  var actual = napa._loadFromPkg('napa-config', {})
+  t.deepEqual(actual, {'cache': false})
+})
+
+test('no-caching', function(t) {
+  t.plan(1)
+  var url = 'https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz'
+  var pkgName = 'ember'
+  var pkg = new Pkg(url, pkgName, {'cache': false})
+  clean([pkg.cacheTo, pkg.installTo], function() {
+      pkg.install(function() {
+          t.ok(!pkg.cached, 'pkg was not cached, as specified')
+      })
+  })
+})
+
+test('cache-path', function(t) {
+  t.plan(5)
+  var url = 'https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz'
+  var pkgName = 'ember'
+  var pkg = new Pkg(url, pkgName, {'cache-path': '/.napa-cache'})
+  t.equal(pkg.cacheTo,'/.napa-cache/github.com/emberjs/ember.js/archive/v1.7.0.tar.gz', 'The cache path matches.')
+
+  pkg = new Pkg(url, pkgName, {'cache-path': './.napa-cache'})
+  clean([pkg.cacheTo, pkg.installTo], function() {
+      pkg.install(function() {
+          t.ok(fs.existsSync(pkg.installTo), 'file was installed to node_modules')
+          t.ok(pkg.installed, 'pkg says it was installed')
+          t.ok(fs.existsSync(pkg.cacheTo), 'file was cached')
+          t.ok(pkg.cached, 'pkg says it was cached')
+    })
+  })
+})
+
 test('pkg install', function(t) {
   t.plan(8)
   var url = 'https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz'
