@@ -82,6 +82,22 @@ Now it will install to `node_modules/adifferentname`.
 }
 ```
 
+### Additional configuration
+
+The application currently supports the following configuration options under a `napa-config` property in package.json.
+
+* "cache" - Set to *false* to completely disable package caching.
+* "cache-path" - Override default path to a specific location(relative to the current working directory)
+
+```json
+{
+  "napa-config": {
+    "cache": false,
+    "cache-path": "../.napa-cache"
+  }
+}
+```
+
 ## Release History
 * 1.2.0 - Callback optional with cli and do not ignore .gitignore files when unpacking (@dai-shi).
 * 1.1.0 - Upgrade download for better downloads behind proxies (@msieurtoph).
@@ -96,5 +112,5 @@ Now it will install to `node_modules/adifferentname`.
 * 0.1.0 - initial release
 
 ## License
-Copyright (c) 2014 Kyle Robinson Young  
+Copyright (c) 2014 Kyle Robinson Young
 Licensed under the MIT license.

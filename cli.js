@@ -13,11 +13,13 @@ napa.cli = function(args, done) {
     if (total < 1) return done()
   }
   pkg = napa.readpkg()
+  opts = napa._loadFromPkg('napa-config', {})
   if (pkg) args = args.map(napa.args).concat(pkg)
   else args = args.map(napa.args)
   args.forEach(function(cmd) {
     total++
-    var pkg = new Pkg(cmd[0], cmd[1], {ref: cmd[2]})
+    opts['ref'] = cmd[2]
+    var pkg = new Pkg(cmd[0], cmd[1], opts)
     pkg.install(close)
   })
 }
@@ -64,13 +66,20 @@ napa.url = function(url) {
 }
 
 napa.readpkg = function() {
-  pkg = path.join(cwd, 'package.json')
-  if (!fs.existsSync(pkg)) return false
-  pkg = require(pkg)
-  if (!pkg.hasOwnProperty('napa')) return false
-  return Object.keys(pkg.napa).map(function(key) {
+  naparepos = napa._loadFromPkg('napa')
+  return naparepos !== false  && Object.keys(pkg.napa).map(function(key) {
     return [napa.url(pkg.napa[key]), key, napa.getref(pkg.napa[key])]
   })
+}
+
+napa._loadFromPkg = function (property, defaults) {
+  if (typeof defaults === 'undefined') {
+    defaults = false
+  }
+  pkg = path.join(cwd, 'package.json')
+  if (!fs.existsSync(pkg)) return defaults
+  pkg = require(pkg)
+  return pkg.hasOwnProperty(property) ? pkg[property] : defaults
 }
 
 napa.getref = function(url) {
