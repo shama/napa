@@ -115,13 +115,14 @@ test('cache-path', function(t) {
 })
 
 test('pkg install', function(t) {
-  t.plan(8)
+  t.plan(9)
   var url = 'https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz'
   var pkgName = 'ember'
   var pkg = new Pkg(url, pkgName)
   clean([pkg.cacheTo, pkg.installTo], function() {
     pkg.install(function() {
       t.ok(fs.existsSync(pkg.installTo), 'file was installed to node_modules')
+      t.ok(!fs.existsSync(path.resolve(pkg.installTo, '.git')), '.git directory was deleted')
       t.ok(pkg.installed, 'pkg says it was installed')
       t.ok(fs.existsSync(pkg.cacheTo), 'file was cached')
       t.ok(pkg.cached, 'pkg says it was cached')
