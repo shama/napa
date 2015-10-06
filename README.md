@@ -113,5 +113,5 @@ The application currently supports the following configuration options under a `
 * 0.1.0 - initial release
 
 ## License
-Copyright (c) 2014 Kyle Robinson Young
+Copyright (c) 2015 Kyle Robinson Young
 Licensed under the MIT license.
