@@ -115,14 +115,13 @@ test('cache-path', function (t) {
 })
 
 test('pkg install', function (t) {
-  t.plan(9)
+  t.plan(8)
   var url = 'https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz'
   var pkgName = 'ember'
   var pkg = new Pkg(url, pkgName)
   clean([pkg.cacheTo, pkg.installTo], function () {
     pkg.install(function () {
       t.ok(fs.existsSync(pkg.installTo), 'file was installed to node_modules')
-      t.ok(!fs.existsSync(path.resolve(pkg.installTo, '.git')), '.git directory was deleted')
       t.ok(pkg.installed, 'pkg says it was installed')
       t.ok(fs.existsSync(pkg.cacheTo), 'file was cached')
       t.ok(pkg.cached, 'pkg says it was cached')
@@ -157,13 +156,14 @@ test('pkg install different version', function (t) {
 })
 
 test('pkg install with ref', function (t) {
-  t.plan(4)
+  t.plan(5)
   var pkg = new Pkg('https://github.com/gdsmith/jquery.easing', 'jquery.easing', {ref: '1.3.1'})
 
   clean([pkg.cacheTo, pkg.installTo], function () {
     pkg.install(function (err) {
       var packagePath
       t.notOk(err, 'no error should occur')
+      t.ok(!fs.existsSync(path.resolve(pkg.installTo, '.git')), '.git directory was deleted')
       t.ok(fs.existsSync(packagePath = path.resolve(pkg.installTo, 'package.json')), 'package.json has been generated')
       t.ok((pkg = require(packagePath)) && pkg.name && pkg.version, 'package.json has required fields')
       t.ok(pkg && pkg.description && pkg.readme && pkg.repository && pkg.repository.type, 'package.json has recommended fields')
