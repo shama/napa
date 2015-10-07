@@ -7,17 +7,18 @@ var Pkg = require('./lib/pkg')
 
 var napa = module.exports = {}
 
-napa.cli = function(args, done) {
+napa.cli = function (args, done) {
   var total = 0
   var pkg = napa.readpkg()
   var opts = napa._loadFromPkg('napa-config', {})
 
-  if (pkg)
+  if (pkg) {
     args = args.map(napa.args).concat(pkg)
-  else
+  } else {
     args = args.map(napa.args)
+  }
 
-  args.forEach(function(cmd) {
+  args.forEach(function (cmd) {
     total++
     opts.ref = cmd[2]
 
@@ -25,14 +26,15 @@ napa.cli = function(args, done) {
     pkg.install(close)
   })
 
-  function close() {
+  function close () {
     total--
-    if (total < 1 && typeof done === 'function')
+    if (total < 1 && typeof done === 'function') {
       return done()
+    }
   }
 }
 
-napa.args = function(str) {
+napa.args = function (str) {
   var url, name
   var split = str.split(':')
 
@@ -50,13 +52,14 @@ napa.args = function(str) {
     url = split.join(':')
   }
 
-  if (!name)
+  if (!name) {
     name = url.slice(url.lastIndexOf('/') + 1)
+  }
 
   return [napa.url(url), name, napa.getref(str)]
 }
 
-napa.url = function(url) {
+napa.url = function (url) {
   if (typeof url !== 'string') {
     if (url.url) url = url.url
     else return false
@@ -73,38 +76,42 @@ napa.url = function(url) {
     }
   }
 
-  if (url.slice(0, 1) === '/')
+  if (url.slice(0, 1) === '/') {
     url = url.slice(1)
+  }
 
-  if (url.indexOf('://') === -1)
+  if (url.indexOf('://') === -1) {
     url = 'git://github.com/' + url
+  }
 
   return url
 }
 
-napa.readpkg = function() {
+napa.readpkg = function () {
   var repos = napa._loadFromPkg('napa') || {}
 
-  return Object.keys(repos).map(function(repo) {
+  return Object.keys(repos).map(function (repo) {
     var repoLocation = repos[repo]
     return [napa.url(repoLocation), repo, napa.getref(repoLocation)]
   })
 }
 
 napa._loadFromPkg = function (property, defaults) {
-  if (typeof defaults === 'undefined')
+  if (typeof defaults === 'undefined') {
     defaults = false
+  }
 
   var pkgPath = path.join(cwd, 'package.json')
 
-  if (!fs.existsSync(pkgPath))
+  if (!fs.existsSync(pkgPath)) {
     return defaults
+  }
 
   var pkg = require(pkgPath)
 
   return pkg.hasOwnProperty(property) ? pkg[property] : defaults
 }
 
-napa.getref = function(url) {
+napa.getref = function (url) {
   return url.replace(/^[^#]*#?/, '')
 }

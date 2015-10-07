@@ -24,7 +24,7 @@
   },
   "main": "lib/pkg.js",
   "scripts": {
-    "test": "node test"
+    "test": "standard && node test"
   },
   "dependencies": {
     "download": ">=4.2.0 <4.3.0-0",
@@ -35,6 +35,7 @@
     "tar-pack": ">=2.0.0 <2.1.0-0"
   },
   "devDependencies": {
+    "standard": "^5.3.1",
     "tape": ">=4.2.0 <4.3.0-0"
   },
   "keywords": [
