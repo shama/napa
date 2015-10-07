@@ -115,7 +115,7 @@ test('cache-path', function (t) {
 })
 
 test('pkg install', function (t) {
-  t.plan(9)
+  t.plan(8)
   var url = 'https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz'
   var pkgName = 'ember'
   var pkg = new Pkg(url, pkgName)
@@ -156,7 +156,7 @@ test('pkg install different version', function (t) {
 })
 
 test('pkg install with ref', function (t) {
-  t.plan(4)
+  t.plan(5)
   var pkg = new Pkg('https://github.com/gdsmith/jquery.easing', 'jquery.easing', {ref: '1.3.1'})
 
   clean([pkg.cacheTo, pkg.installTo], function () {
