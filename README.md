@@ -99,6 +99,7 @@ The application currently supports the following configuration options under a `
 ```
 
 ## Release History
+* 2.0.1 - Fix path must be a string error (@caseyWebb).
 * 2.0.0 - Better detection for github repos, fixes when creating a package.json, cached git #tag urls now get updated properly (@tomekwi). Add config options for disabling cache or setting cache path (@bbsbb). Fix for npm3 erroring when .git folder present (@caseyWebb). Updating dependencies.
 * 1.2.0 - Callback optional with cli and do not ignore .gitignore files when unpacking (@dai-shi).
 * 1.1.0 - Upgrade download for better downloads behind proxies (@msieurtoph).
