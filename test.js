@@ -122,7 +122,6 @@ test('pkg install', function (t) {
   clean([pkg.cacheTo, pkg.installTo], function () {
     pkg.install(function () {
       t.ok(fs.existsSync(pkg.installTo), 'file was installed to node_modules')
-      t.ok(!fs.existsSync(path.resolve(pkg.installTo, '.git')), '.git directory was deleted')
       t.ok(pkg.installed, 'pkg says it was installed')
       t.ok(fs.existsSync(pkg.cacheTo), 'file was cached')
       t.ok(pkg.cached, 'pkg says it was cached')
@@ -164,6 +163,7 @@ test('pkg install with ref', function (t) {
     pkg.install(function (err) {
       var packagePath
       t.notOk(err, 'no error should occur')
+      t.ok(!fs.existsSync(path.resolve(pkg.installTo, '.git')), '.git directory was deleted')
       t.ok(fs.existsSync(packagePath = path.resolve(pkg.installTo, 'package.json')), 'package.json has been generated')
       t.ok((pkg = require(packagePath)) && pkg.name && pkg.version, 'package.json has required fields')
       t.ok(pkg && pkg.description && pkg.readme && pkg.repository && pkg.repository.type, 'package.json has recommended fields')
