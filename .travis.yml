@@ -1,7 +1,12 @@
 language: node_js
+sudo: false
+
 node_js:
   - '0.10'
   - '0.12'
   - '4.0'
   - '4.1'
   - 'iojs'
+
+after_script:
+  - node node_modules/codeclimate-test-reporter/bin/codeclimate.js < coverage/lcov.info
