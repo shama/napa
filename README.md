@@ -1,4 +1,4 @@
-# napa [![Build Status](http://img.shields.io/travis/shama/napa.svg)](https://travis-ci.org/shama/napa) [![Build status](https://ci.appveyor.com/api/projects/status/db3kl6mxis97r7ay/branch/master)](https://ci.appveyor.com/project/shama/napa/branch/master)
+# napa [![Build Status](http://img.shields.io/travis/shama/napa.svg)](https://travis-ci.org/shama/napa) [![Build status](https://ci.appveyor.com/api/projects/status/db3kl6mxis97r7ay/branch/master)](https://ci.appveyor.com/project/shama/napa/branch/master) [![Test Coverage](https://codeclimate.com/github/shama/napa/badges/coverage.svg)](https://codeclimate.com/github/shama/napa/coverage) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/)
 
 A helper for installing repos without a `package.json` with npm.
 
