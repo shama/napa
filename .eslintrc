@@ -1,20 +1,8 @@
 
 {
-  "ecmaFeatures": {
-    "modules": true,
-    "experimentalObjectRestSpread": true
-  },
-
   "env": {
-    "browser": false,
     "es6": true,
     "node": true
-  },
-
-  "globals": {
-    "document": false,
-    "navigator": false,
-    "window": false
   },
 
   "rules": {
@@ -100,10 +88,12 @@
     "no-unreachable": 2,
     "no-unused-vars": [2, { "vars": "all", "args": "none" }],
     "no-useless-call": 2,
+    "no-var": 2,
     "no-with": 2,
     "one-var": [2, { "initialized": "never" }],
     "operator-linebreak": [2, "after", { "overrides": { "?": "before", ":": "before" } }],
     "padded-blocks": [2, "never"],
+    "prefer-const": 2,
     "quotes": [2, "single", "avoid-escape"],
     "radix": 2,
     "semi": [2, "never"],
@@ -120,10 +110,6 @@
     "use-isnan": 2,
     "valid-typeof": 2,
     "wrap-iife": [2, "any"],
-    "yoda": [2, "never"],
-
-    "standard/object-curly-even-spacing": [2, "either"],
-    "standard/array-bracket-even-spacing": [2, "either"],
-    "standard/computed-property-even-spacing": [2, "even"]
+    "yoda": [2, "never"]
   }
 }

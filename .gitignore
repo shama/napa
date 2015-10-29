@@ -1,3 +1,5 @@
-/coverage/
-/node_modules/
-/.napa-cache
+coverage
+napa_modules
+node_modules
+.napa-cache
+npm-debug.*

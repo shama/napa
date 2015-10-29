@@ -4,5 +4,4 @@ engines:
 
 ratings:
    paths:
-   - lib/pkg.js
-   - cli.js
+   - lib/**/*.js

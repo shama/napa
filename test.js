@@ -1,4 +1,6 @@
-var napa = require('./cli.js')
+'use strict'
+
+var napa = require('./lib/cli')
 var Pkg = require('./lib/pkg')
 var test = require('tape')
 var path = require('path')
