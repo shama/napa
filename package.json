@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "bluebird": "^3.0.2",
+    "cli-spinner": "^0.2.1",
     "download": "^4.4.1",
     "mkdirp": ">=0.5.0 <0.6.0-0",
     "npm-cache-filename": ">=1.0.1 <1.1.0-0",
