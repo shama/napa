@@ -4,6 +4,9 @@ var path = require('path')
 var fs = require('fs')
 var cwd = process.cwd()
 var Pkg = require('./lib/pkg')
+var extend = require('extend')
+
+var flags = ['--save']
 
 var napa = module.exports = {}
 
@@ -13,12 +16,8 @@ napa.cli = function (args, done) {
   var opts = napa._loadFromPkg('napa-config', {})
 
   // Check for flags
-  args.forEach(function (arg, index) {
-    if (arg === '--save') {
-      opts.save = true
-      args.splice(index, 1)
-    }
-  })
+  var flagsFound = napa._findFlags(args)
+  opts = extend(opts, flagsFound)
 
   if (pkg) {
     args = args.map(napa.args).concat(pkg)
@@ -27,6 +26,7 @@ napa.cli = function (args, done) {
   }
 
   args.forEach(function (cmd) {
+    if (flags.indexOf(cmd[1]) >= 0) return
     total++
     opts.ref = cmd[2]
 
@@ -122,4 +122,15 @@ napa._loadFromPkg = function (property, defaults) {
 
 napa.getref = function (url) {
   return url.replace(/^[^#]*#?/, '')
+}
+
+napa._findFlags = function (args) {
+  var flagsFound = {}
+  args.forEach(function (arg, index) {
+    if (flags.indexOf(arg) >= 0) {
+      flagsFound[arg.substr(2)] = true
+    }
+  })
+
+  return flagsFound
 }
