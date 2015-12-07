@@ -12,6 +12,14 @@ napa.cli = function (args, done) {
   var pkg = napa.readpkg()
   var opts = napa._loadFromPkg('napa-config', {})
 
+  // Check for flags
+  args.forEach(function (arg, index) {
+    if (arg === '--save') {
+      opts.save = true
+      args.splice(index, 1)
+    }
+  })
+
   if (pkg) {
     args = args.map(napa.args).concat(pkg)
   } else {
