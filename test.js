@@ -4,6 +4,8 @@ var test = require('tape')
 var path = require('path')
 var fs = require('fs')
 var rimraf = require('rimraf')
+var loadJsonFile = require('load-json-file')
+var writeJsonFile = require('write-json-file')
 
 function clean (filepaths, done) {
   var count = filepaths.length
@@ -14,6 +16,11 @@ function clean (filepaths, done) {
   for (var i = 0; i < filepaths.length; i++) {
     rimraf(filepaths[i], cb)
   }
+}
+
+function cleanPkgJson (path, json, name) {
+  delete json.napa[name]
+  writeJsonFile.sync(path, json, { indent: 2 })
 }
 
 test('args', function (t) {
@@ -167,6 +174,21 @@ test('pkg install with ref', function (t) {
       t.ok(fs.existsSync(packagePath = path.resolve(pkg.installTo, 'package.json')), 'package.json has been generated')
       t.ok((pkg = require(packagePath)) && pkg.name && pkg.version, 'package.json has required fields')
       t.ok(pkg && pkg.description && pkg.readme && pkg.repository && pkg.repository.type, 'package.json has recommended fields')
+    })
+  })
+})
+
+test('pkg install with --save', function (t) {
+  t.plan(2)
+  var pkg = new Pkg('https://github.com/gdsmith/jquery.easing', 'jquery.easing', {save: true})
+
+  clean([pkg.cacheTo, pkg.installTo], function () {
+    pkg.install(function () {
+      var pkgPath = path.join(pkg.cwd, 'package.json')
+      var pkgJson = loadJsonFile.sync(pkgPath)
+      t.equal(pkgJson.napa[pkg.name], 'https://github.com/gdsmith/jquery.easing')
+      t.ok(pkg.saveToPkgJson)
+      cleanPkgJson(pkgPath, pkgJson, pkg.name)
     })
   })
 })
