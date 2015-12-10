@@ -21,8 +21,9 @@
   "bin": {
     "napa": "bin/napa"
   },
-  "main": "lib/pkg.js",
+  "main": "lib",
   "scripts": {
+    "build": "babel src --out-dir lib",
     "format": "standard",
     "test": "istanbul cover --report lcov --print detail test.js",
     "coverage": "istanbul report html && open ./coverage/index.html"
@@ -38,6 +39,9 @@
     "tar-pack": ">=2.0.0 <2.1.0-0"
   },
   "devDependencies": {
+    "babel": "^6.1.18",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.2.0",
+    "babel-preset-es2015": "^6.1.18",
     "codeclimate-test-reporter": "^0.1.1",
     "istanbul": "^0.3.22",
     "pre-commit": "^1.1.1",
@@ -60,11 +64,18 @@
     "cache": false
   },
   "pre-commit": [
-    "format"
+    "format",
+    "build"
   ],
+  "standard": {
+    "ignore": [
+      "lib"
+    ]
+  },
   "optionalDependencies": {
     "ember": "file:napa_modules/ember",
     "flippant": "file:napa_modules/flippant",
-    "handlebars": "file:napa_modules/handlebars"
+    "handlebars": "file:napa_modules/handlebars",
+    "jquery.inview": "file:napa_modules/jquery.inview"
   }
 }
