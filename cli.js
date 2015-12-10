@@ -4,13 +4,22 @@ var path = require('path')
 var fs = require('fs')
 var cwd = process.cwd()
 var Pkg = require('./lib/pkg')
+var extend = require('extend')
+var minimist = require('minimist')
 
 var napa = module.exports = {}
 
 napa.cli = function (args, done) {
+  var parsedArgs = minimist(args)
+  args = parsedArgs['_']
   var total = 0
   var pkg = napa.readpkg()
   var opts = napa._loadFromPkg('napa-config', {})
+
+  // Add flags to opts
+  var flags = parsedArgs
+  delete flags['_']
+  opts = extend(opts, flags)
 
   if (pkg) {
     args = args.map(napa.args).concat(pkg)
