@@ -1,7 +1,7 @@
 {
   "name": "napa",
   "description": "A helper for installing repos without a package.json with npm.",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "homepage": "https://github.com/shama/napa",
   "author": {
     "name": "Kyle Robinson Young",
