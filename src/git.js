@@ -1,7 +1,8 @@
 import fs from 'fs'
 import path from 'path'
 import Promise from 'bluebird'
-import { spawn } from 'child_process'
+import cl from './cl'
+import log from 'npmlog'
 
 export function urlIsRepo (url) {
   const gitUrlPrefixes = ['git+', 'git://']
@@ -13,43 +14,21 @@ export function urlIsRepo (url) {
 }
 
 export function checkout (installTo, ref) {
-  const fetch = spawn('git', ['checkout', `origin/${ref}`], { cwd: installTo })
-  return new Promise((resolve, reject) => {
-    fetch.on('close', (code) => {
-      if (code === 0) {
-        resolve()
-      }
-    })
-  })
+  if (ref !== 'master') {
+    log.info('napa', `checking out branch ${ref}`)
+    return cl('git', ['checkout', `origin/${ref}`], { cwd: installTo })
+  }
+  return Promise.resolve()
 }
 
 export function clone (installTo, url) {
-  const clone = spawn('git', ['clone', '--depth', '1', '-q', url.replace('git+', ''), installTo])
-  return new Promise((resolve, reject) => {
-    clone.stderr.on('data', (err) => reject(err.toString()))
-    clone.on('close', (code) => {
-      if (code === 0) {
-        resolve()
-      }
-    })
-  })
+  log.info('napa', `cloning to ${installTo}`)
+  return cl('git', ['clone', '--depth', '1', '-q', url.replace('git+', ''), installTo])
 }
 
 export function fetch (installTo, ref) {
-  const fetch = spawn('git', ['fetch', 'origin', ref], { cwd: installTo })
-  return new Promise((resolve, reject) => {
-    fetch.stderr.on('data', (err) => {
-      const fatal = err.toString().indexOf('fatal') !== -1
-      if (fatal) {
-        reject(err.toString())
-      }
-    })
-    fetch.on('close', (code) => {
-      if (code === 0) {
-        resolve()
-      }
-    })
-  })
+  if (ref !== 'master') return cl('git', ['fetch', 'origin', ref], { cwd: installTo })
+  return Promise.resolve()
 }
 
 /**

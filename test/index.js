@@ -1,43 +1,45 @@
 'use strict'
-
-var napa = require('./lib/cli')
-var Pkg = require('./lib/pkg')
-var test = require('tape')
-var path = require('path')
-var fs = require('fs')
-var rimraf = require('rimraf')
-
+/*
+const napa = require('../lib/cli')
+const Pkg = require('../lib').Pkg
+const test = require('tape')
+const path = require('path')
+const fs = require('fs')
+const rimraf = require('rimraf')
+*/
+require('./src')
+/*
 function clean (filepaths, done) {
-  var count = filepaths.length
+  let count = filepaths.length
   function cb () {
     count--
     if (count < 1) process.nextTick(done)
   }
-  for (var i = 0; i < filepaths.length; i++) {
+  for (let i = 0; i < filepaths.length; i++) {
     rimraf(filepaths[i], cb)
   }
 }
 
 test('args', function (t) {
   t.plan(5)
-  t.deepEqual(napa.args('user/repo'), ['git://github.com/user/repo', 'repo', ''])
-  t.deepEqual(napa.args('https://github.com/user/repo:testing'), ['https://github.com/user/repo', 'testing', ''])
-  t.deepEqual(napa.args('git://github.com/user/repo2'), ['git://github.com/user/repo2', 'repo2', ''])
+  t.deepEqual(napa.parseArgs('user/repo'), ['git://github.com/user/repo', 'repo', ''], 'user/repo')
+  t.deepEqual(napa.parseArgs('https://github.com/user/repo:testing'), ['https://github.com/user/repo', 'testing', ''], 'https://github.com/user/repo:testing')
+  t.deepEqual(napa.parseArgs('git://github.com/user/repo2'), ['git://github.com/user/repo2', 'repo2', ''], 'git://github.com/user/repo2')
   // when developing on windows, this returns zip, linux is tar.gz
-  t.deepEqual(napa.args('angular/angular.js#v1.2.3:angular'), ['https://github.com/angular/angular.js/archive/v1.2.3.' + ((process.platform === 'win32') ? 'zip' : 'tar.gz'), 'angular', 'v1.2.3:angular'])
-  t.deepEqual(napa.args('https://github.com/angular/angular.js/archive/master.zip:angular'), ['https://github.com/angular/angular.js/archive/master.zip', 'angular', ''])
+  t.deepEqual(napa.parseArgs('angular/angular.js#v1.2.3:angular'), ['https://github.com/angular/angular.js/archive/v1.2.3.' + ((process.platform === 'win32') ? 'zip' : 'tar.gz'), 'angular', 'v1.2.3:angular'], 'angular/angular.js#v1.2.3:angular')
+  t.deepEqual(napa.parseArgs('https://github.com/angular/angular.js/archive/master.zip:angular'), ['https://github.com/angular/angular.js/archive/master.zip', 'angular', ''], 'https://github.com/angular/angular.js/archive/master.zip:angular')
 })
 
 test('cmds', function (t) {
   t.plan(8)
-  var testPath = path.resolve('node_modules', 'test')
-  var pkg = null
+  const testPath = path.resolve('node_modules', 'test')
+  let pkg = null
 
   function assertPkg (url, name, cb) {
     pkg = new Pkg(url, name, { _mock: cb })
     pkg.install()
   }
-
+  debugger;
   // if github is in the url then its treated like a git+ url
   assertPkg('git://github.com/user/repo', 'test', function (result) {
     t.deepEqual(result, ['git', ['clone', '--depth', '1', '-q', 'git://github.com/user/repo', testPath]])
@@ -61,18 +63,18 @@ test('cmds', function (t) {
   assertPkg('ssh://test.com/user/repo', 'test', function (result) {
     t.deepEqual(result, ['download', 'ssh://test.com/user/repo', testPath])
   })
-  assertPkg('https://github.com/angular/angular.js/archive/master.zip', 'angular', function (result) {
+ assertPkg('https://github.com/angular/angular.js/archive/master.zip', 'angular', function (result) {
     t.deepEqual(result, ['download', 'https://github.com/angular/angular.js/archive/master.zip', path.resolve('node_modules', 'angular')])
   })
   assertPkg('https://github.com/yahoo/pure/releases/download/v0.5.0/pure-0.5.0.tar.gz', 'pure', function (result) {
     t.deepEqual(result, ['download', 'https://github.com/yahoo/pure/releases/download/v0.5.0/pure-0.5.0.tar.gz', path.resolve('node_modules', 'pure')])
   })
-})
 
+})
 test('readpkg', function (t) {
   t.plan(1)
-  var actual = napa.readpkg()
-  var expected = [
+  const actual = napa.readpkg()
+  const expected = [
     ['git://github.com/foo/repo', 'foo', ''],
     ['https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz', 'ember', ''],
     ['git://github.com/components/handlebars.js', 'handlebars', '']
@@ -82,15 +84,15 @@ test('readpkg', function (t) {
 
 test('readconfig', function (t) {
   t.plan(1)
-  var actual = napa._loadFromPkg('napa-config', {})
+  const actual = napa._loadFromPkg('napa-config', {})
   t.deepEqual(actual, {'cache': false})
 })
 
 test('no-caching', function (t) {
   t.plan(1)
-  var url = 'https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz'
-  var pkgName = 'ember'
-  var pkg = new Pkg(url, pkgName, {'cache': false})
+  const url = 'https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz'
+  const pkgName = 'ember'
+  const pkg = new Pkg(url, pkgName, {'cache': false})
   clean([pkg.cacheTo, pkg.installTo], function () {
     pkg.install(function () {
       t.ok(!pkg.cached, 'pkg was not cached, as specified')
@@ -100,9 +102,9 @@ test('no-caching', function (t) {
 
 test('cache-path', function (t) {
   t.plan(5)
-  var url = 'https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz'
-  var pkgName = 'ember'
-  var pkg = new Pkg(url, pkgName, {'cache-path': '/napa-cache'})
+  const url = 'https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz'
+  const pkgName = 'ember'
+  let pkg = new Pkg(url, pkgName, {'cache-path': '/napa-cache'})
   t.ok(pkg.cacheTo.indexOf('napa-cache') !== -1, 'The cache path matches.')
 
   pkg = new Pkg(url, pkgName, {'cache-path': './.napa-cache'})
@@ -118,9 +120,9 @@ test('cache-path', function (t) {
 
 test('pkg install', function (t) {
   t.plan(8)
-  var url = 'https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz'
-  var pkgName = 'ember'
-  var pkg = new Pkg(url, pkgName)
+  const url = 'https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz'
+  const pkgName = 'ember'
+  let pkg = new Pkg(url, pkgName)
   clean([pkg.cacheTo, pkg.installTo], function () {
     pkg.install(function () {
       t.ok(fs.existsSync(pkg.installTo), 'file was installed to node_modules')
@@ -143,8 +145,8 @@ test('pkg install', function (t) {
 
 test('pkg install different version', function (t) {
   t.plan(2)
-  var result = null
-  var pkg = new Pkg('https://github.com/emberjs/ember.js/archive/v1.6.0.tar.gz', 'ember')
+  let result = null
+  let pkg = new Pkg('https://github.com/emberjs/ember.js/archive/v1.6.0.tar.gz', 'ember')
   pkg.install(function () {
     result = require(path.resolve(pkg.installTo, 'package.json'))[pkg._napaResolvedKey]
     t.equal(result, 'https://github.com/emberjs/ember.js/archive/v1.6.0.tar.gz', 'should have installed the older version')
@@ -159,11 +161,11 @@ test('pkg install different version', function (t) {
 
 test('pkg install with ref', function (t) {
   t.plan(5)
-  var pkg = new Pkg('https://github.com/gdsmith/jquery.easing', 'jquery.easing', {ref: '1.3.1'})
+  let pkg = new Pkg('https://github.com/gdsmith/jquery.easing', 'jquery.easing', {ref: '1.3.1'})
 
   clean([pkg.cacheTo, pkg.installTo], function () {
     pkg.install(function (err) {
-      var packagePath
+      let packagePath
       t.notOk(err, 'no error should occur')
       t.ok(!fs.existsSync(path.resolve(pkg.installTo, '.git')), '.git directory was deleted')
       t.ok(fs.existsSync(packagePath = path.resolve(pkg.installTo, 'package.json')), 'package.json has been generated')
@@ -172,3 +174,33 @@ test('pkg install with ref', function (t) {
     })
   })
 })
+
+/*
+test('pkg install --save', (t) => {
+  t.plan(10)
+  const url = 'https://github.com/emberjs/ember.js/archive/v1.7.0.tar.gz'
+  const pkgName = 'ember'
+  const pkg = new Pkg(url, pkgName, {save: true})
+  clean([pkg.cacheTo, pkg.installTo], function () {
+    pkg.install(function () {
+      //test the save
+
+      //test the install
+      t.ok(fs.existsSync(pkg.installTo), 'file was installed to node_modules')
+      t.ok(pkg.installed, 'pkg says it was installed')
+      t.ok(fs.existsSync(pkg.cacheTo), 'file was cached')
+      t.ok(pkg.cached, 'pkg says it was cached')
+      // Delete pkg and install again
+      clean([pkg.installTo], function () {
+        pkg = new Pkg(url, pkgName)
+        t.ok(!pkg.installed, 'pkg says not installed after deleted')
+        t.ok(fs.existsSync(pkg.cacheTo), 'pkg deleted but cache remains')
+        pkg.install(function () {
+          t.ok(fs.existsSync(pkg.installTo), 'pkg installed from cache')
+          t.ok(pkg.installed, 'pkg says installed when from cache')
+        })
+      })
+    })
+  })
+})
+*/

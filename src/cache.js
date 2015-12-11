@@ -19,8 +19,8 @@ export default class {
     )
   }
 
-  exists () {
-    return fs.existsSync(path.join(this.cacheTo, 'package.json'))
+  get exists () {
+    return fs.existsSync(this.cacheTo)
   }
 
   install (installTo) {
