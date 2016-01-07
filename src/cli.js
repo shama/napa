@@ -39,15 +39,11 @@ export function parseArgs (str) {
   let location, name, ref
   const split = str.split(':')
   let nameChanged = false
-
   location = str
-
   ref = location.replace(/^[^#]*#?/, '')
-
   if (location.slice(0, 1) === '/') {
     location = location.slice(1)
   }
-
   if (split.length === 3) {
     name = split[2]
     nameChanged = true
@@ -56,15 +52,6 @@ export function parseArgs (str) {
     if (location.indexOf('://') === -1 && location.indexOf('tags/') === -1) {
       name = split[1]
       location = 'git://github.com/' + location
-      /*
-      if (location.indexOf('#') !== -1) {
-        const s = location.split('#')
-        s[1] = s[1].slice(0, s[1].lastIndexOf(':'))
-        location = `https://github.com/${s[0]}/archive/${s[1]}` + ((process.platform === 'win32') ? '.zip' : '.tar.gz')
-      } else {
-        location = 'git://github.com/' + location
-      }
-      */
     } else {
       name = location.slice(location.lastIndexOf('/') + 1)
     }
@@ -98,7 +85,6 @@ export function parseArgs (str) {
     ref = location.slice(location.lastIndexOf('/') + 1, point)
   }
   if (ref.indexOf('tags/') !== -1) {
-    console.log(name)
     if (name.indexOf(':') === -1) {
       name = location.slice(location.lastIndexOf('/') + 1)
     } else {

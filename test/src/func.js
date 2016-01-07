@@ -2,11 +2,12 @@
 
 const Promise = require('bluebird')
 const cli = require('../../lib/cli')
-const P = require('../../lib/pkg')
-const rimraf = require('rimraf')
-const fs = require('fs')
-const log = require('npmlog')
+const Pkg = require('../../lib/pkg').default
+// const rimraf = require('rimraf')
+// const fs = require('fs')
+// const log = require('npmlog')
 
+/*
 const clean = function (filepaths, done) {
   let count = filepaths.length
   function cb () {
@@ -17,7 +18,26 @@ const clean = function (filepaths, done) {
     rimraf(filepaths[i], cb)
   }
 }
+*/
 
+module.exports = {
+  parse: function (url) {
+    return new Promise(function (resolve, reject) {
+      const args = cli.parseArgs(url)
+      resolve(args)
+    })
+  },
+
+  load: function (url) {
+    return new Promise(function (resolve, reject) {
+      const args = cli.parseArgs(url)
+      const pk = new Pkg(args[0], args[1], args[2])
+      resolve(pk.installMethod)
+    })
+  }
+}
+
+/*
 module.exports = function (args) {
   return new Promise(function (resolve, reject) {
     args = args.split(' ')
@@ -66,3 +86,4 @@ module.exports = function (args) {
     }
   })
 }
+*/
