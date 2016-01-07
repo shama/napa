@@ -1,7 +1,7 @@
 'use strict'
 
 const test = require('tape')
-const fs = require('fs')
+// const fs = require('fs')
 // Testing promise
 const tfunc = require('./func')
 
@@ -15,7 +15,7 @@ test('Pkg_load_package', (t) => {
   tfunc('load angular/angular.js#v1.2.3:angular').then((res) => t.deepEqual(res, ['https://github.com/angular/angular.js/archive/v1.2.3.' + ((process.platform === 'win32') ? 'zip' : 'tar.gz'), 'angular', 'v1.2.3'], 'angular/angular.js#v1.2.3:angular'))
   tfunc('load https://github.com/angular/angular.js/archive/master.zip:angular').then((res) => t.deepEqual(res, ['https://github.com/angular/angular.js/archive/master.zip', 'angular', 'master'], 'https://github.com/angular/angular.js/archive/master.zip:angular'))
 })
-
+/*
 test('Pkg_install_by_archive', (t) => {
   t.plan(5)
 
@@ -28,3 +28,4 @@ test('Pkg_install_by_archive', (t) => {
     t.ok(tn.complete, 'Module imported')
   })
 })
+*/
