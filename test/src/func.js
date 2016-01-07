@@ -3,12 +3,11 @@
 const Promise = require('bluebird')
 const cli = require('../../lib/cli')
 const Pkg = require('../../lib/pkg').default
-// const rimraf = require('rimraf')
-// const fs = require('fs')
-// const log = require('npmlog')
+const rimraf = require('rimraf')
+const fs = require('fs')
 
-/*
 const clean = function (filepaths, done) {
+  if (filepaths.length < 1) return process.nextTick(done)
   let count = filepaths.length
   function cb () {
     count--
@@ -18,13 +17,36 @@ const clean = function (filepaths, done) {
     rimraf(filepaths[i], cb)
   }
 }
-*/
+
+function installPkg (deletePaths, url, cb) {
+  const args = cli.parseArgs(url)
+  const pk = new Pkg(args[0], args[1], args[2])
+  let dPaths = []
+  if (deletePaths[0] === 'cache' || deletePaths[1] === 'cache') dPaths.push(pk.cache.cacheTo)
+  if (deletePaths[0] === 'install' || deletePaths[1] === 'install') dPaths.push(pk.installTo)
+  clean(dPaths, function () {
+    let obj = {
+      installTo: pk.installTo,
+      cacheTo: pk.cache.cacheTo,
+      cleanInstall: !fs.existsSync(pk.installTo),
+      cleanCache: !fs.existsSync(pk.cache.cacheTo),
+      type: pk.installMethod
+    }
+    pk.install().then(function (p) {
+      obj.installed = fs.existsSync(p.installTo)
+      obj.cached = fs.existsSync(p.cache.cacheTo)
+      obj.useCache = p.useCache
+      obj.package = require(p.name)
+      return cb(obj)
+    })
+  })
+}
 
 module.exports = {
   parse: function (url) {
     return new Promise(function (resolve, reject) {
       const args = cli.parseArgs(url)
-      resolve(args)
+      return resolve(args)
     })
   },
 
@@ -32,7 +54,37 @@ module.exports = {
     return new Promise(function (resolve, reject) {
       const args = cli.parseArgs(url)
       const pk = new Pkg(args[0], args[1], args[2])
-      resolve(pk.installMethod)
+      return resolve(pk.installMethod)
+    })
+  },
+
+  install : function (url) {
+    return new Promise(function (resolve, reject) {
+      installPkg(['cache', 'install'], url, function (obj) {
+        clean([obj.installTo, obj.cacheTo], function () {
+          obj.cleaned = !fs.existsSync(obj.installTo) && !fs.existsSync(obj.cacheTo)
+          return resolve(obj)
+        })
+      })
+    })
+  },
+
+  cache: function(url) {
+    return new Promise(function (resolve, reject) {
+      installPkg(['cache', 'install'], url, function (pk1) {
+        clean([pk1.installTo], function () {
+          pk1.installCleaned = !fs.existsSync(pk1.installTo)
+          installPkg(['', ''], url, function (pk2) {
+            pk2.installCleaned = pk1.installCleaned
+            pk2.cleanInstall = pk1.cleanInstall
+            pk2.cleanCache = pk1.cleanCache
+            clean([pk2.installTo, pk2.cacheTo], function () {
+              pk2.cleaned = !fs.existsSync(pk2.installTo) && !fs.existsSync(pk2.cacheTo)
+              return resolve(pk2)
+            })
+          })
+        })
+      })
     })
   }
 }
