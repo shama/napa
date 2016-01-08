@@ -14,7 +14,7 @@ export function urlIsRepo (url) {
 }
 
 export function clone (installTo, url, ref) {
-  log.info('napa', `cloning to ${installTo}`)
+  log.info('napa', `cloning branch: ${ref} to ${installTo}`)
   return cl('git', ['clone', '-b', ref, '--depth', '1', '-q', url.replace('git+', ''), installTo])
 }
 
