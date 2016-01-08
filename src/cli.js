@@ -25,7 +25,7 @@ export function cli (args, done) {
   Promise
     .map(pkgs, ([location, name]) => {
       let arr = parseArgs(location)
-      return new Pkg(arr[0], name, arr[2]).install()
+      return new Pkg(arr[0], name, arr[2], config).install()
     })
     .then(() => spinner.stop(true))
     .then(() => log.resume())

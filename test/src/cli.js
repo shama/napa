@@ -6,7 +6,6 @@ const cli = require('../../lib/cli')
 const fs = require('fs')
 const rimraf = require('rimraf')
 
-
 const clean = function (filepaths, done) {
   let count = filepaths.length
   function cb () {
