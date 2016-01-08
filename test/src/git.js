@@ -1,17 +1,29 @@
 const test = require('tape')
-const fs = require('fs')
 // Testing promise
 const tfunc = require('./func')
 
-test('Pkg_install_by_git', (t) => {
-  t.plan(5)
+test('git_install', (t) => {
+  t.plan(6)
 
-  tfunc('git https://github.com/orbweaver-/test_napa.git').then(function (pkg) {
-    t.ok(fs.existsSync(pkg.installTo), 'file was installed to node_modules')
-    t.ok(pkg.isInstalled, 'pkg says it was installed')
-    t.ok(fs.existsSync(pkg.cache.cacheTo), 'file was cached')
-    t.ok(pkg.useCache, 'pkg says it was cached')
-    const tn = require('test_napa')
-    t.ok(tn.complete, 'Module imported')
+  tfunc.install('orbweaver-/test_napa').then((r) => {
+    t.ok((r.cleanInstall && r.cleanCache), 'Started with clean installation')
+    t.equal(r.type, 'git', 'It is an git download')
+    t.ok(r.installed, 'package was installed')
+    t.ok((r.useCache && r.cached), 'package was cached')
+    t.ok(r.package.complete, 'Module imported')
+    t.ok(r.cleaned, 'installation and cache was cleaned up')
+  })
+})
+
+test('git_install_different_branch', (t) => {
+  t.plan(6)
+
+  tfunc.install('orbweaver-/test_napa#other').then((r) => {
+    t.ok((r.cleanInstall && r.cleanCache), 'Started with clean installation')
+    t.equal(r.type, 'git', 'It is an git download')
+    t.ok(r.installed, 'package was installed')
+    t.ok((r.useCache && r.cached), 'package was cached')
+    t.ok(r.package.complete, 'Module imported')
+    t.ok(r.cleaned, 'installation and cache was cleaned up')
   })
 })

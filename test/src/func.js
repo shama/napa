@@ -58,7 +58,7 @@ module.exports = {
     })
   },
 
-  install : function (url) {
+  install: function (url) {
     return new Promise(function (resolve, reject) {
       installPkg(['cache', 'install'], url, function (obj) {
         clean([obj.installTo, obj.cacheTo], function () {
@@ -69,7 +69,7 @@ module.exports = {
     })
   },
 
-  cache: function(url) {
+  cache: function (url) {
     return new Promise(function (resolve, reject) {
       installPkg(['cache', 'install'], url, function (pk1) {
         clean([pk1.installTo], function () {
