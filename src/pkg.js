@@ -101,10 +101,9 @@ export default class {
         switch (this.installMethod) {
           case 'cache': return this.cache.install(this.installTo)
           case 'download': return archive.install(this.url.slice(this.url.lastIndexOf('/') + 1), this.url, this.cwd, this.installTo, this.useCache, this.cache.cacheTo.slice(0, this.cache.cacheTo.lastIndexOf('/')))
-          case 'git': return git.clone(this.installTo, this.url)
+          case 'git': return git.clone(this.installTo, this.url, this.ref)
               .then(() => git.enableShallowCloneBranches(this.installTo))
               .then(() => git.fetch(this.installTo, this.ref))
-              .then(() => git.checkout(this.installTo, this.ref))
         }
       })()
         .then(() => this.writePackageJSON())

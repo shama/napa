@@ -13,17 +13,9 @@ export function urlIsRepo (url) {
   return isGitRepo || isGithubRepo
 }
 
-export function checkout (installTo, ref) {
-  if (ref !== 'master') {
-    log.info('napa', `checking out branch ${ref}`)
-    return cl('git', ['checkout', `origin/${ref}`], { cwd: installTo })
-  }
-  return Promise.resolve()
-}
-
-export function clone (installTo, url) {
+export function clone (installTo, url, ref) {
   log.info('napa', `cloning to ${installTo}`)
-  return cl('git', ['clone', '--depth', '1', '-q', url.replace('git+', ''), installTo])
+  return cl('git', ['clone', '-b', ref, '--depth', '1', '-q', url.replace('git+', ''), installTo])
 }
 
 export function fetch (installTo, ref) {
