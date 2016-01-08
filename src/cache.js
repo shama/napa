@@ -20,12 +20,16 @@ export default class {
   }
 
   get exists () {
-    return fs.existsSync(this.cacheTo)
+    return fs.existsSync(this.packageName)
+  }
+
+  get packageName () {
+    return (typeof this.cacheTo === 'string' && this.cacheTo.indexOf('.tar.gz') === -1) ? this.cacheTo + '.tar.gz' : this.cacheTo
   }
 
   install (installTo) {
     return new Promise((resolve, reject) => {
-      fs.createReadStream(this.cacheTo)
+      fs.createReadStream(this.packageName)
         .pipe(tar.unpack(installTo, (err) => err ? reject(err) : resolve()))
     })
   }
@@ -36,9 +40,8 @@ export default class {
         if (err) {
           return reject(err)
         }
-        const cName = (typeof this.cacheTo === 'string' && this.cacheTo.indexOf('.tar.gz') === -1) ? this.cacheTo + '.tar.gz' : this.cacheTo
         tar.pack(saveFrom, { ignoreFiles: [] })
-          .pipe(fs.createWriteStream(cName))
+          .pipe(fs.createWriteStream(this.packageName))
           .on('close', (err) => err ? reject(err) : resolve())
       })
     })

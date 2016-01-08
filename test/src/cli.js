@@ -54,7 +54,7 @@ test('CLI_install_command_normal', (t) => {
       const tn = require('test_napa')
       t.ok(tn.complete, 'Module loaded (master)')
 
-      t.ok(fs.existsSync('napa_modules/test_napa_other'), 'Module installed (master)')
+      t.ok(fs.existsSync('napa_modules/test_napa_other'), 'Module installed (other)')
       const tno = require('test_napa_other')
       t.ok(tno.other, 'Module loaded (other)')
 

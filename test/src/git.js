@@ -7,7 +7,7 @@ test('git_install', (t) => {
 
   tfunc.install('orbweaver-/test_napa').then((r) => {
     t.ok((r.cleanInstall && r.cleanCache), 'Started with clean installation')
-    t.equal(r.type, 'git', 'It is an git download')
+    t.equal(r.type, 'git', 'It is a git download')
     t.ok(r.installed, 'package was installed')
     t.ok((r.useCache && r.cached), 'package was cached')
     t.ok(r.package.complete, 'Module imported')
@@ -20,7 +20,7 @@ test('git_install_different_branch', (t) => {
 
   tfunc.install('orbweaver-/test_napa#other').then((r) => {
     t.ok((r.cleanInstall && r.cleanCache), 'Started with clean installation')
-    t.equal(r.type, 'git', 'It is an git download')
+    t.equal(r.type, 'git', 'It is a git download')
     t.ok(r.installed, 'package was installed')
     t.ok((r.useCache && r.cached), 'package was cached')
     console.log(r.package)

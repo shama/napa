@@ -27,14 +27,14 @@ function installPkg (deletePaths, url, cb) {
   clean(dPaths, function () {
     let obj = {
       installTo: pk.installTo,
-      cacheTo: pk.cache.cacheTo,
+      cacheTo: pk.cache.packageName,
       cleanInstall: !fs.existsSync(pk.installTo),
-      cleanCache: !fs.existsSync(pk.cache.cacheTo),
+      cleanCache: !fs.existsSync(pk.cache.packageName),
       type: pk.installMethod
     }
     pk.install().then(function (p) {
       obj.installed = fs.existsSync(p.installTo)
-      obj.cached = fs.existsSync(p.cache.cacheTo)
+      obj.cached = fs.existsSync(p.cache.packageName)
       obj.useCache = p.useCache
       obj.package = require(p.name)
       return cb(obj)
