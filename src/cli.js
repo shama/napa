@@ -8,7 +8,7 @@ import Pkg from './pkg'
 const cwd = process.cwd()
 const spinner = new Spinner()
 
-export function cli (args, testing = false, done) {
+export function cli (args, done) {
   const pkg = readPkg()
   const config = getPackageJSONConfigObject('napa-config')
   let pkgs
@@ -19,17 +19,14 @@ export function cli (args, testing = false, done) {
   } else {
     pkgs = []
   }
-  if (!testing) {
-    log.pause()
-    spinner.start()
-  }
-  for (let i = 0; i < pkgs.length; i++) {
-    pkgs[i] = parseArgs(pkgs[i][0])
-  }
+  log.pause()
+  spinner.start()
+
   Promise
-    .map(pkgs, ([location, name, ref]) => new Pkg(location, name, ref, config).install().then((res) => {
-      Promise.resolve(res)
-    }))
+    .map(pkgs, ([location, name]) => {
+      let arr = parseArgs(location)
+      return new Pkg(arr[0], name, arr[2]).install()
+    })
     .then(() => spinner.stop(true))
     .then(() => log.resume())
     .then(done)

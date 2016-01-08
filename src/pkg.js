@@ -21,6 +21,8 @@ export default class {
     this.modulesDir = path.join(this.cwd, 'napa_modules')
     this.installTo = path.join(this.modulesDir, this.name)
 
+    // console.log([this.ref, this.name, this.location])
+
     this.useCache = (typeof opts.cache === 'undefined') || opts.cache !== false
     if (this.useCache) {
       this.cache = new NapaCache(this.url, opts)

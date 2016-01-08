@@ -56,7 +56,9 @@
     "assets"
   ],
   "napa": {
-    "test_napa": "orbweaver-/test_napa"
+    "test_napa": "orbweaver-/test_napa",
+    "test_napa_archive": "orbweaver-/test_napa#tags/master",
+    "test_napa_other": "orbweaver-/test_napa#other"
   },
   "napa-config": {
     "cache": true
@@ -82,6 +84,7 @@
     "pure": "file:napa_modules/pure",
     "test_napa": "file:napa_modules/test_napa",
     "test_napa.git": "file:napa_modules/test_napa.git",
+    "test_napa_archive": "file:napa_modules/test_napa_archive",
     "test_napa_other": "file:napa_modules/test_napa_other"
   }
 }

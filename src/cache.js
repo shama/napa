@@ -36,9 +36,9 @@ export default class {
         if (err) {
           return reject(err)
         }
-
+        const cName = (typeof this.cacheTo === 'string' && this.cacheTo.indexOf('.tar.gz') === -1) ? this.cacheTo + '.tar.gz' : this.cacheTo
         tar.pack(saveFrom, { ignoreFiles: [] })
-          .pipe(fs.createWriteStream(this.cacheTo))
+          .pipe(fs.createWriteStream(cName))
           .on('close', (err) => err ? reject(err) : resolve())
       })
     })
