@@ -24,7 +24,7 @@ export default function (args, done) {
 
   Promise
     .map(pkgs, ([location, name]) => {
-      let arr = parseArgs(location)
+      const arr = parseArgs(location)
       return new Pkg(arr[0], name, arr[2], config).install()
     })
     .then(() => spinner.stop(true))
@@ -38,9 +38,6 @@ export function parseArgs (str) {
   let nameChanged = false
   location = str
   ref = location.replace(/^[^#]*#?/, '')
-  if (location.slice(0, 1) === '/') {
-    location = location.slice(1)
-  }
   if (split.length === 3) {
     name = split[2]
     nameChanged = true

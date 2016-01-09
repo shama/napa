@@ -25,7 +25,7 @@ export default class {
 
     this.useCache = (typeof opts.cache === 'undefined') || opts.cache !== false
     if (this.useCache) {
-      this.cache = new NapaCache(this.url, opts)
+      this.cache = new NapaCache(this.location, opts)
     }
   }
 
@@ -40,44 +40,12 @@ export default class {
     if (this.isGitRepo) {
       return pkgJSON[this._napaGitRefKey] === this.ref
     } else {
-      return pkgJSON[this._napaResolvedKey] === this.url
+      return pkgJSON[this._napaResolvedKey] === this.location
     }
   }
 
   get isGitRepo () {
-    return git.urlIsRepo(this.url)
-  }
-
-  get url () {
-    let url = this.location
-
-    if (typeof url !== 'string') {
-      if (url.url) url = url.url
-      else return false
-    }
-
-    if (url.indexOf('#') !== -1) {
-      if (url.indexOf('://') === -1) {
-        const userRepo = url.split('#')[0]
-        url = 'https://github.com/' + userRepo
-      } else {
-        url = url.split('#')[0]
-      }
-    }
-
-    if (url.slice(0, 1) === '/') {
-      url = url.slice(1)
-    }
-
-    if (url.indexOf('git@') !== -1) {
-      url = 'https://' + url.split('@')[1].replace(':', '/')
-    }
-
-    if (url.indexOf('://') === -1 && url.indexOf('@') === -1) {
-      url = 'git://github.com/' + url
-    }
-
-    return url
+    return git.urlIsRepo(this.location)
   }
 
   get installMethod () {
@@ -91,7 +59,7 @@ export default class {
   }
 
   install (done) {
-    log.info('napa', `INSTALLING: ${this.url}`)
+    log.info('napa', `INSTALLING: ${this.location}`)
     if (this.isInstalled) {
       if (this.isCorrectVersion) {
         return Promise.resolve()
@@ -102,8 +70,8 @@ export default class {
       return (() => {
         switch (this.installMethod) {
           case 'cache': return this.cache.install(this.installTo)
-          case 'download': return archive.install(this.url.slice(this.url.lastIndexOf('/') + 1), this.url, this.cwd, this.installTo, this.useCache, this.cache.cacheTo.slice(0, this.cache.cacheTo.lastIndexOf('/')))
-          case 'git': return git.clone(this.installTo, this.url, this.ref)
+          case 'download': return archive.install(this.location.slice(this.location.lastIndexOf('/') + 1), this.location, this.cwd, this.installTo, this.useCache, this.cache.cacheTo.slice(0, this.cache.cacheTo.lastIndexOf('/')))
+          case 'git': return git.clone(this.installTo, this.location, this.ref)
               .then(() => git.enableShallowCloneBranches(this.installTo))
               .then(() => git.fetch(this.installTo, this.ref))
         }
@@ -134,7 +102,7 @@ export default class {
     return (() => {
       switch (this.installMethod) {
         case 'cache': return this.cache.install(this.installTo)
-        case 'download': return archive.install(this.url, this.installTo)
+        case 'download': return archive.install(this.location, this.installTo)
         case 'git': return git.fetch(this.installTo, this.ref)
             .then(() => git.checkout(this.installTo, this.ref))
       }
@@ -175,7 +143,7 @@ export default class {
     pkg.main = 'index.js'
     pkg.author = ''
 
-    pkg[this._napaResolvedKey] = this.url
+    pkg[this._napaResolvedKey] = this.location
     pkg[this._napaGitRefKey] = this.ref
 
     return new Promise((resolve, reject) => {

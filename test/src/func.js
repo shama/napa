@@ -21,11 +21,11 @@ const clean = function (filepaths, done) {
 function installPkg (deletePaths, url, cb) {
   const args = cli.parseArgs(url)
   const pk = new Pkg(args[0], args[1], args[2])
-  let dPaths = []
+  const dPaths = []
   if (deletePaths[0] === 'cache' || deletePaths[1] === 'cache') dPaths.push(pk.cache.packageName)
   if (deletePaths[0] === 'install' || deletePaths[1] === 'install') dPaths.push(pk.installTo)
   clean(dPaths, function () {
-    let obj = {
+    const obj = {
       installTo: pk.installTo,
       cacheTo: pk.cache.packageName,
       cleanInstall: !fs.existsSync(pk.installTo),
@@ -60,11 +60,15 @@ module.exports = {
   },
 
   install: function (url) {
-    return new Promise(function (resolve, reject) {
-      installPkg(['cache', 'install'], url, function (obj) {
-        clean([obj.installTo, obj.packageName], function () {
-          obj.cleaned = !fs.existsSync(obj.installTo) && !fs.existsSync(obj.packageName)
-          return resolve(obj)
+    return new Promise((resolve, reject) => {
+      installPkg(['cache', 'install'], url, (obj) => {
+        const args = cli.parseArgs(url)
+        const pk = new Pkg(args[0], args[1], args[2])
+        pk.install().then((r) => {
+          clean([obj.installTo, obj.packageName], () => {
+            obj.cleaned = !fs.existsSync(obj.installTo) && !fs.existsSync(obj.packageName)
+            return resolve(obj)
+          })
         })
       })
     })
@@ -79,7 +83,7 @@ module.exports = {
             pk2.installCleaned = pk1.installCleaned
             pk2.cleanInstall = pk1.cleanInstall
             pk2.cleanCache = pk1.cleanCache
-            clean([pk2.installTo, pk2.cacheTo], function () {
+            clean([pk2.installTo, pk2.packageName], function () {
               pk2.cleaned = !fs.existsSync(pk2.installTo) && !fs.existsSync(pk2.packageName)
               return resolve(pk2)
             })
