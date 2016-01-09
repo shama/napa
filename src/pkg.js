@@ -21,11 +21,17 @@ export default class {
     this.modulesDir = path.join(this.cwd, 'napa_modules')
     this.installTo = path.join(this.modulesDir, this.name)
 
-    // console.log([this.ref, this.name, this.location])
-
     this.useCache = (typeof opts.cache === 'undefined') || opts.cache !== false
     if (this.useCache) {
       this.cache = new NapaCache(this.location, opts)
+    }
+
+    if (this.useCache && this.cache.exists) {
+      this.installMethod = 'cache'
+    } else if (this.isGitRepo) {
+      this.installMethod = 'git'
+    } else {
+      this.installMethod = 'download'
     }
   }
 
@@ -46,16 +52,6 @@ export default class {
 
   get isGitRepo () {
     return git.urlIsRepo(this.location)
-  }
-
-  get installMethod () {
-    if (this.useCache && this.cache.exists) {
-      return 'cache'
-    } else if (this.isGitRepo) {
-      return 'git'
-    } else {
-      return 'download'
-    }
   }
 
   install (done) {

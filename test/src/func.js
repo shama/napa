@@ -22,8 +22,8 @@ function installPkg (deletePaths, url, cb) {
   const args = cli.parseArgs(url)
   const pk = new Pkg(args[0], args[1], args[2])
   const dPaths = []
-  if (deletePaths[0] === 'cache' || deletePaths[1] === 'cache') dPaths.push(pk.cache.packageName)
-  if (deletePaths[0] === 'install' || deletePaths[1] === 'install') dPaths.push(pk.installTo)
+  if (deletePaths[0] === 'cache' || deletePaths[1] === 'cache') dPaths.push('/tmp/napa_cache')
+  if (deletePaths[0] === 'install' || deletePaths[1] === 'install') dPaths.push('napa_modules')
   clean(dPaths, function () {
     const obj = {
       installTo: pk.installTo,
@@ -65,8 +65,8 @@ module.exports = {
         const args = cli.parseArgs(url)
         const pk = new Pkg(args[0], args[1], args[2])
         pk.install().then((r) => {
-          clean([obj.installTo, obj.packageName], () => {
-            obj.cleaned = !fs.existsSync(obj.installTo) && !fs.existsSync(obj.packageName)
+          clean([obj.installTo, obj.cacheTo], () => {
+            obj.cleaned = !fs.existsSync(obj.installTo) && !fs.existsSync(obj.cacheTo)
             return resolve(obj)
           })
         })
