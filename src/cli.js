@@ -8,16 +8,16 @@ import Pkg from './pkg'
 const cwd = process.cwd()
 const spinner = new Spinner()
 
-export function cli (args, done) {
+export default function (args, done) {
   const pkg = readPkg()
   const config = getPackageJSONConfigObject('napa-config')
-  let pkgs
+  let pkgs = []
   if (args.length === 0) {
     pkgs = pkg
-  } else if (pkg) {
-    pkgs = args.map(parseArgs)
+  } else if (pkg.length === 0) {
+    pkgs = pkgs.concat(args)
   } else {
-    pkgs = []
+    pkgs = pkgs.concat(args).concat(pkg)
   }
   log.pause()
   spinner.start()

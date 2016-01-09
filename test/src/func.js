@@ -37,7 +37,7 @@ function installPkg (deletePaths, url, cb) {
       obj.installed = fs.existsSync(p.installTo)
       obj.cached = fs.existsSync(p.cache.packageName)
       obj.useCache = p.useCache
-      obj.package = require(p.name)
+      obj.package = require(`../../napa_modules/${p.name}`)
       return cb(obj)
     })
   })

@@ -11,10 +11,7 @@ export function install (fileName, url, downloadTo, installTo, cache, cacheTo) {
     new Download()
       .get(url)
       .dest(downloadTo)
-      .run((err) => {
-        if (err) {
-          reject(err)
-        }
+      .run(() => {
         resolve()
       })
   })

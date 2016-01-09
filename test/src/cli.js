@@ -49,7 +49,7 @@ test('CLI_install_command_normal', (t) => {
   clean(['./napa_modules', '/tmp/napa_cache'], () => {
     t.ok(!fs.existsSync('napa_modules'), 'Napa_modules deleted')
     t.ok(!fs.existsSync('/tmp/napa_cache'), 'Napa cache deleted')
-    cli.cli([], () => {
+    cli.default([], () => {
       t.ok(fs.existsSync('napa_modules/test_napa'), 'Module installed (master)')
       const tn = require('test_napa')
       t.ok(tn.complete, 'Module loaded (master)')
@@ -68,3 +68,34 @@ test('CLI_install_command_normal', (t) => {
     })
   })
 })
+
+// NOTE:  This test works if you take out the test_napa and test_napa_archive objects in package.json
+//        Without creating unnessarily long function to only test this edge case, uncommenting and making
+//        The required changes are much easier
+/*
+test('CLI_install_with_args', (t) => {
+  t.plan(9)
+
+  clean(['./napa_modules', '/tmp/napa_cache'], () => {
+    t.ok(!fs.existsSync('napa_modules'), 'Napa_modules deleted')
+    t.ok(!fs.existsSync('/tmp/napa_cache'), 'Napa cache deleted')
+    cli.default([['orbweaver-/test_napa', 'test_napa'], ['orbweaver-/test_napa#tags/master', 'test_napa_archive']], () => {
+      t.ok(fs.existsSync('napa_modules/test_napa'), 'Module installed (master)')
+      const tn = require('test_napa')
+      t.ok(tn.complete, 'Module loaded (master)')
+
+      t.ok(fs.existsSync('napa_modules/test_napa_other'), 'Module installed (other)')
+      const tno = require('test_napa_other')
+      t.ok(tno.other, 'Module loaded (other)')
+
+      t.ok(fs.existsSync('napa_modules/test_napa_archive'), 'Module installed (archive)')
+      const tna = require('test_napa_archive')
+      t.ok(tna.complete, 'Module loaded (archive)')
+
+      clean(['/tmp/napa_cache', 'napa_modules'], () => {
+        t.ok((!fs.existsSync('/tmp/napa_cache') && !fs.existsSync('napa_modules')), 'Modules cleaned up')
+      })
+    })
+  })
+})
+*/
