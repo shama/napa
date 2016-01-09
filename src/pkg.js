@@ -111,12 +111,15 @@ export default class {
           `${this.name}@${this.ref} ${path.relative(process.cwd(), this.installTo)}`
       )
       })
-
-      .then(() => this.useCache && this.isInstalled
-          ? this.cache.save(this.installTo)
-          : Promise.resolve()
-        )
-
+      .then(() => {
+        if (this.useCache && this.isInstalled && this.installMethod !== 'download') {
+          return this.cache.save(this.installTo).then(() => {
+            return Promise.resolve(this)
+          })
+        } else {
+          return Promise.resolve(this)
+        }
+      })
       .catch((err) => {
         rimraf.sync(this.installTo)
         this.log.error('napa', 'Error updating', this.name, '\n', err.toString())

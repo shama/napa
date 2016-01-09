@@ -91,5 +91,18 @@ module.exports = {
         })
       })
     })
+  },
+
+  update: (url) => {
+    return new Promise((resolve, reject) => {
+      installPkg(['cache', 'install'], url, (obj) => {
+        installPkg(['', ''], `${url}#other`, (obj2) => {
+          clean([obj.installTo, obj.cacheTo], () => {
+            obj.cleaned = !fs.existsSync(obj.installTo) && !fs.existsSync(obj.cacheTo)
+            return resolve(obj2)
+          })
+        })
+      })
+    })
   }
 }
