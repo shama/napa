@@ -88,12 +88,14 @@ The application currently supports the following configuration options under a `
 
 * "cache" - Set to *false* to completely disable package caching.
 * "cache-path" - Override default path to a specific location(relative to the current working directory)
+* "log-level" - Set the log level (default is 'info', may also be 'silent', 'error', 'warn', 'verbose', or 'silly').
 
 ```json
 {
   "napa-config": {
     "cache": false,
-    "cache-path": "../.napa-cache"
+    "cache-path": "../.napa-cache",
+    "log-level": "error"
   }
 }
 ```
