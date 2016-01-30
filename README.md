@@ -101,6 +101,7 @@ The application currently supports the following configuration options under a `
 ```
 
 ## Release History
+* Please view https://github.com/shama/napa/commits/master for history.
 * 2.0.1 - Fix path must be a string error (@caseyWebb).
 * 2.0.0 - Better detection for github repos, fixes when creating a package.json, cached git #tag urls now get updated properly (@tomekwi). Add config options for disabling cache or setting cache path (@bbsbb). Fix for npm3 erroring when .git folder present (@caseyWebb). Updating dependencies.
 * 1.2.0 - Callback optional with cli and do not ignore .gitignore files when unpacking (@dai-shi).
@@ -116,5 +117,5 @@ The application currently supports the following configuration options under a `
 * 0.1.0 - initial release
 
 ## License
-Copyright (c) 2015 Kyle Robinson Young
+Copyright (c) 2016 Kyle Robinson Young
 Licensed under the MIT license.
