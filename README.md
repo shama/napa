@@ -84,11 +84,13 @@ Now it will install to `node_modules/adifferentname`.
 
 ### Additional configuration
 
-The application currently supports the following configuration options under a `napa-config` property in package.json.
+The application currently supports the following configuration options under a `napa-config` property in `package.json`.
 
-* "cache" - Set to *false* to completely disable package caching.
-* "cache-path" - Override default path to a specific location(relative to the current working directory)
-* "log-level" - Set the log level (default is 'info', may also be 'silent', 'error', 'warn', 'verbose', or 'silly').
+Option name | Default value | Desctiption
+---|---|---
+`cache` | `true` | Set to `false` to completely disable package caching.
+`cache-path` | [`'<OS temp>/cache'`](https://github.com/shama/napa/blob/master/lib/pkg.js#L8) | Override default path to a specific location<br>(relative to the current working directory).
+`log-level` | `info`  | Set the log level: `silent`/`error`/`warn`/`verbose`/`silly`.
 
 ```json
 {
@@ -101,19 +103,21 @@ The application currently supports the following configuration options under a `
 ```
 
 ## Release History
-* Please view https://github.com/shama/napa/commits/master for history.
+
+Please view https://github.com/shama/napa/commits/master for history.
+
 * 2.0.1 - Fix path must be a string error (@caseyWebb).
-* 2.0.0 - Better detection for github repos, fixes when creating a package.json, cached git #tag urls now get updated properly (@tomekwi). Add config options for disabling cache or setting cache path (@bbsbb). Fix for npm3 erroring when .git folder present (@caseyWebb). Updating dependencies.
-* 1.2.0 - Callback optional with cli and do not ignore .gitignore files when unpacking (@dai-shi).
+* 2.0.0 - Better detection for GitHub repos, fixes when creating a `package.json`, cached git `#tag` urls now get updated properly (@tomekwi). Add config options for disabling cache or setting cache path (@bbsbb). Fix for npm 3 erroring when `.git` folder present (@caseyWebb). Updating dependencies.
+* 1.2.0 - Callback optional with CLI and do not ignore `.gitignore` files when unpacking (@dai-shi).
 * 1.1.0 - Upgrade download for better downloads behind proxies (@msieurtoph).
 * 1.0.2 - Fix references to git specifiers. Thanks @jsdevel!
-* 1.0.1 - Fix path to cli.
+* 1.0.1 - Fix path to CLI.
 * 1.0.0 - Avoids duplicate installs and will install from cache.
 * 0.4.1 - Fix git reporting non-errors on stderr by running in quiet mode.
-* 0.4.0 - Add strip: 1 when downloading to avoid untarring within a sub-directory. Thanks @seei!
+* 0.4.0 - Add `strip: 1` when downloading to avoid untarring within a sub-directory. Thanks @seei!
 * 0.3.0 - Ability to download packages using any URL
-* 0.2.0 - Ability to set packages using napa key in package.json
-* 0.1.1 - --depth 1 for faster cloning
+* 0.2.0 - Ability to set packages using napa key in `package.json`
+* 0.1.1 - `--depth 1` for faster cloning
 * 0.1.0 - initial release
 
 ## License
