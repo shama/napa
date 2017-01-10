@@ -90,7 +90,7 @@ Option name | Default value | Desctiption
 ---|---|---
 `cache` | `true` | Set to `false` to completely disable package caching.
 `cache-path` | [`'<OS temp>/cache'`](https://github.com/shama/napa/blob/master/lib/pkg.js#L8) | Override default path to a specific location<br>(relative to the current working directory).
-`log-level` | `info`  | Set the log level: `silent`/`error`/`warn`/`verbose`/`silly`.
+`log-level` | `'info'`  | Set the log level: `'silent'`/`'error'`/`'warn'`/`'verbose'`/`'silly'`.
 
 ```json
 {
