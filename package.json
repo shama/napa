@@ -41,11 +41,11 @@
     "write-json-file": "^2.2.0"
   },
   "devDependencies": {
-    "codeclimate-test-reporter": "^0.3.0",
-    "istanbul": "^0.4.2",
-    "pre-commit": "^1.1.1",
-    "standard": "^5.4.1",
-    "tape": "^4.4.0"
+    "codeclimate-test-reporter": "^0.5.0",
+    "istanbul": "^0.4.5",
+    "pre-commit": "^1.2.2",
+    "standard": "^10.0.2",
+    "tape": "^4.6.3"
   },
   "keywords": [
     "npm",
