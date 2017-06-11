@@ -121,5 +121,5 @@ Please view https://github.com/shama/napa/commits/master for history.
 * `0.1.0` - initial release
 
 ## License
-Copyright (c) 2016 Kyle Robinson Young
+Copyright (c) 2017 Kyle Robinson Young
 Licensed under the MIT license.
