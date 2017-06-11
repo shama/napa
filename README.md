@@ -102,6 +102,9 @@ Option name | Default value | Desctiption
 }
 ```
 
+### Using Node.js < 4?
+Please use `npm install napa@2.3.0` and upgrade your Node.js.
+
 ## Release History
 
 Please view https://github.com/shama/napa/commits/master for history.

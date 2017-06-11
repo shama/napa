@@ -1,7 +1,7 @@
 {
   "name": "napa",
   "description": "A helper for installing repos without a package.json with npm.",
-  "version": "2.3.0",
+  "version": "3.0.0",
   "homepage": "https://github.com/shama/napa",
   "author": {
     "name": "Kyle Robinson Young",
@@ -17,15 +17,14 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">= 0.10.0"
+    "node": ">= 4.0"
   },
   "bin": {
     "napa": "bin/napa"
   },
   "main": "lib/pkg.js",
   "scripts": {
-    "format": "standard",
-    "test": "istanbul cover --report lcov --print detail test.js",
+    "test": "standard && istanbul cover --report lcov --print detail test.js",
     "coverage": "istanbul report html && open ./coverage/index.html"
   },
   "dependencies": {
