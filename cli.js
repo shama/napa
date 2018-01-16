@@ -85,6 +85,15 @@ napa.url = function (url) {
     }
   }
 
+  if (url.indexOf('@') !== -1) {
+    if (url.indexOf('://') === -1) {
+      var ss = url.split('@')
+      url = 'https://github.com/' + ss[0]
+    } else {
+      url = url.replace(/@.*?$/, '')
+    }
+  }
+
   if (url.slice(0, 1) === '/') {
     url = url.slice(1)
   }
@@ -122,5 +131,5 @@ napa._loadFromPkg = function (property, defaults) {
 }
 
 napa.getref = function (url) {
-  return url.replace(/^[^#]*#?/, '')
+  return url.replace(/^[^#]*#?/, '') || url.replace(/^[^@]*@?/, '')
 }
