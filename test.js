@@ -24,12 +24,14 @@ function cleanPkgJson (path, json, name) {
 }
 
 test('args', function (t) {
-  t.plan(5)
+  t.plan(6)
   t.deepEqual(napa.args('user/repo'), ['git://github.com/user/repo', 'repo', ''])
   t.deepEqual(napa.args('https://github.com/user/repo:testing'), ['https://github.com/user/repo', 'testing', ''])
   t.deepEqual(napa.args('git://github.com/user/repo2'), ['git://github.com/user/repo2', 'repo2', ''])
   // when developing on windows, this returns zip, linux is tar.gz
   t.deepEqual(napa.args('angular/angular.js#v1.2.3:angular'), ['https://github.com/angular/angular.js/archive/v1.2.3.' + ((process.platform === 'win32') ? 'zip' : 'tar.gz'), 'angular', 'v1.2.3:angular'])
+  // when specifying @, "git clone && git reset --hard" is used instead of downloading the .tar.gz (.git folder won't be removed)
+  t.deepEqual(napa.args('angular/angular.js@v1.2.3:angular'), ['https://github.com/angular/angular.js', 'angular', 'v1.2.3:angular'])
   t.deepEqual(napa.args('https://github.com/angular/angular.js/archive/master.zip:angular'), ['https://github.com/angular/angular.js/archive/master.zip', 'angular', ''])
 })
 
@@ -171,6 +173,22 @@ test('pkg install with ref', function (t) {
       var packagePath
       t.notOk(err, 'no error should occur')
       t.ok(!fs.existsSync(path.resolve(pkg.installTo, '.git')), '.git directory was deleted')
+      t.ok(fs.existsSync(packagePath = path.resolve(pkg.installTo, 'package.json')), 'package.json has been generated')
+      t.ok((pkg = require(packagePath)) && pkg.name && pkg.version, 'package.json has required fields')
+      t.ok(pkg && pkg.description && pkg.readme && pkg.repository && pkg.repository.type, 'package.json has recommended fields')
+    })
+  })
+})
+
+test('pkg install with ref', function (t) {
+  t.plan(5)
+  var pkg = new Pkg('https://github.com/gdsmith/jquery.easing', 'jquery.easing', {ref: '1.3.1', 'leave-git': true})
+
+  clean([pkg.cacheTo, pkg.installTo], function () {
+    pkg.install(function (err) {
+      var packagePath
+      t.notOk(err, 'no error should occur')
+      t.ok(fs.existsSync(path.resolve(pkg.installTo, '.git')), '.git directory was not deleted')
       t.ok(fs.existsSync(packagePath = path.resolve(pkg.installTo, 'package.json')), 'package.json has been generated')
       t.ok((pkg = require(packagePath)) && pkg.name && pkg.version, 'package.json has required fields')
       t.ok(pkg && pkg.description && pkg.readme && pkg.repository && pkg.repository.type, 'package.json has recommended fields')
