@@ -82,6 +82,21 @@ Now it will install to `node_modules/adifferentname`.
 }
 ```
 
+### Looking to just `git clone` a tagged release/a branch/a specific commit on github or git url?
+
+```json
+{
+  "scripts": {
+    "install": "napa"
+  },
+  "napa": {
+    "foo": "username/repo@v1.2.3",
+    "bar": "username/bar@some-branch",
+    "baz": "username/baz@347259472813400c7a982690acaa516292a8be40"
+  }
+}
+```
+
 ### Additional configuration
 
 The application currently supports the following configuration options under a `napa-config` property in `package.json`.
@@ -91,13 +106,15 @@ Option name | Default value | Desctiption
 `cache` | `true` | Set to `false` to completely disable package caching
 `cache-path` | [`'<OS temp>/cache'`](https://github.com/shama/napa/blob/master/lib/pkg.js#L8) | Override default path to a specific location<br>(relative to the current working directory)
 `log-level` | `'info'`  | Set the log level: `'silent'`/`'error'`/`'warn'`/`'verbose'`/`'silly'`
+`leave-git` | `false` | Set to `true` to leave the `.git` folder after cloning
 
 ```json
 {
   "napa-config": {
     "cache": false,
     "cache-path": "../.napa-cache",
-    "log-level": "error"
+    "log-level": "error",
+    "leave-git": false
   }
 }
 ```
